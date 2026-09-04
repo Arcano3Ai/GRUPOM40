@@ -149,7 +149,7 @@ function initLeadFormsAndCTAs() {
             return false;
         }
 
-        // Generar enlace y abrir WhatsApp
+        // Generar enlace y abrir WhatsApp con todos los datos
         const waUrl = buildWhatsAppUrl({
             nombre: nombreVal,
             edad: edadVal,
@@ -158,15 +158,24 @@ function initLeadFormsAndCTAs() {
 
         if (heroSubmitBtn) {
             const originalHtml = heroSubmitBtn.innerHTML;
-            heroSubmitBtn.innerHTML = `<span>✓ Abriendo WhatsApp...</span>`;
+            heroSubmitBtn.innerHTML = `<span>✓ Abriendo WhatsApp con tus datos...</span>`;
             heroSubmitBtn.disabled = true;
             setTimeout(() => {
                 heroSubmitBtn.innerHTML = originalHtml;
                 heroSubmitBtn.disabled = false;
-            }, 1500);
+            }, 1800);
         }
 
-        window.open(waUrl, '_blank', 'noopener,noreferrer');
+        // Despacho infalible de WhatsApp (ventana nueva con fallback inmediato)
+        try {
+            const win = window.open(waUrl, '_blank');
+            if (!win || win.closed || typeof win.closed === 'undefined') {
+                window.location.href = waUrl;
+            }
+        } catch (e) {
+            window.location.href = waUrl;
+        }
+
         return true;
     };
 
