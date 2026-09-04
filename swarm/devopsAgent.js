@@ -20,7 +20,7 @@ export class DevOpsAgent extends BaseAgent {
     this.log('Añadiendo cambios al staging de Git...');
     await execAsync('git add -A');
 
-    const commitMsg = 'feat(lead-form): agregar formulario directo en hero al principio y vincular todos los CTAs de WhatsApp';
+    const commitMsg = 'fix(form-layout): colocar formulario al principio (nombre, edad, año de inicio), remover formulario de abajo y vincular CTAs';
     try {
       const { stdout: commitOut } = await execAsync(`git commit -m "${commitMsg}"`);
       this.log(`Commit creado: ${commitOut.trim().split('\n')[0]}`);

@@ -3,54 +3,53 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 /**
- * FrontendAgent: Audita el formulario al principio (Hero) y en el Modal, así como la vinculación de CTAs.
+ * FrontendAgent: Audita que el formulario esté AL PRINCIPIO y que NO haya formularios abajo.
  */
 export class FrontendAgent extends BaseAgent {
   constructor() {
-    super('FrontendAgent', 'UI/UX & Accessibility Specialist');
+    super('FrontendAgent', 'UI/UX & Layout Specialist');
   }
 
   async execute(task) {
-    this.log('Auditando formulario en el Hero (al principio) y en el Modal...');
+    this.log('Auditando layout del formulario...');
 
     const html = await fs.readFile(path.resolve('index.html'), 'utf-8');
-    const css = await fs.readFile(path.resolve('css/styles.css'), 'utf-8');
     const js = await fs.readFile(path.resolve('js/app.js'), 'utf-8');
 
     const auditResults = {
       heroChecks: [],
-      modalChecks: [],
-      ctaChecks: [],
+      bottomChecks: [],
       passed: true
     };
 
-    // 1. Formulario al principio (Hero)
-    const heroFields = ['hero-nombre', 'hero-edad', 'hero-nss', 'btn-hero-submit'];
-    for (const field of heroFields) {
-      const exists = html.includes(`id="${field}"`);
-      auditResults.heroChecks.push({ check: `Hero field ${field} presente`, passed: exists });
+    // 1. Campos requeridos en el Hero (al principio)
+    const requiredHeroFields = [
+      { id: 'hero-nombre', name: 'Nombre Completo' },
+      { id: 'hero-edad', name: 'Edad' },
+      { id: 'hero-inicio', name: 'Año de Inicio Laboral' },
+      { id: 'btn-hero-submit', name: 'Botón de Envío' }
+    ];
+
+    for (const field of requiredHeroFields) {
+      const exists = html.includes(`id="${field.id}"`);
+      auditResults.heroChecks.push({ check: `Campo ${field.name} (${field.id}) en Hero`, passed: exists });
       if (!exists) auditResults.passed = false;
     }
 
-    // 2. Formulario en el Modal
-    const modalFields = ['diag-nombre', 'diag-edad', 'diag-nss', 'btn-submit-whatsapp-modal'];
-    for (const field of modalFields) {
-      const exists = html.includes(`id="${field}"`);
-      auditResults.modalChecks.push({ check: `Modal field ${field} presente`, passed: exists });
-      if (!exists) auditResults.passed = false;
-    }
+    // 2. Verificar que NO haya formularios al fondo de la página
+    const hasBottomModal = html.includes('modal-diagnostico-m40');
+    auditResults.bottomChecks.push({
+      check: 'Sin formularios ni modales estorbando al fondo de la página',
+      passed: !hasBottomModal
+    });
+    if (hasBottomModal) auditResults.passed = false;
 
-    // 3. Estilos del Hero Form
-    const hasHeroStyles = css.includes('.hero-form-card') && css.includes('.hero-quick-form');
-    auditResults.heroChecks.push({ check: 'Estilos CSS de formulario en el Hero presentes', passed: hasHeroStyles });
-    if (!hasHeroStyles) auditResults.passed = false;
+    // 3. Vinculación de CTAs
+    const hasCtaHandler = js.includes('initLeadFormsAndCTAs');
+    auditResults.heroChecks.push({ check: 'Manejador unificado de CTAs presente', passed: hasCtaHandler });
+    if (!hasCtaHandler) auditResults.passed = false;
 
-    // 4. Lógica de Vinculación de CTAs en JS
-    const hasCtaBinding = js.includes('initLeadFormsAndCTAs') && js.includes('buildWhatsAppUrl');
-    auditResults.ctaChecks.push({ check: 'Controlador de vinculación de CTAs de WhatsApp presente', passed: hasCtaBinding });
-    if (!hasCtaBinding) auditResults.passed = false;
-
-    this.log(`Auditoría UI/UX completada: ${auditResults.passed ? 'APROBADA' : 'FALLIDA'}`);
+    this.log(`Auditoría UI completada: ${auditResults.passed ? 'APROBADA' : 'FALLIDA'}`);
     return auditResults;
   }
 }

@@ -1,6 +1,6 @@
 /**
- * GRUPO MODALIDAD 40 - LÓGICA DE ALTA CONVERSIÓN & PRE-CONSULTA WHATSAPP
- * Formulario Directo en Hero, Modal Reutilizable, Sincronización de Datos y CTAs
+ * GRUPO MODALIDAD 40 - LÓGICA OFICIAL
+ * Formulario Directo en el Hero (Nombre, Edad, Año de Inicio), Vinculación de CTAs y Simulador
  */
 
 // Constantes Oficiales México 2026
@@ -8,8 +8,7 @@ const CONFIG = {
     PHONE: '5212206494278', // Teléfono Asesoría Oficial +52 1 220 649 4278
     UMA_DIARIA_2026: 117.31,
     DIAS_MES_PROMEDIO: 30.4,
-    FACTOR_COSTO_M40_2026: 0.14438,
-    NSS_LENGTH: 11
+    FACTOR_COSTO_M40_2026: 0.14438
 };
 
 // Helper para formatear moneda en Pesos Mexicanos (MXN)
@@ -21,233 +20,180 @@ function formatCurrency(val) {
     }).format(val);
 }
 
-// Helper para sanitizar NSS a solo dígitos (máx 11)
-function sanitizeNSS(val) {
-    if (!val) return '';
-    return val.replace(/\D/g, '').slice(0, CONFIG.NSS_LENGTH);
-}
-
-// Helper para aplicar máscara visual al NSS (XX-XX-XX-XXXX-X)
-function formatNSSDisplay(rawDigits) {
-    const digits = sanitizeNSS(rawDigits);
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 4) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
-    if (digits.length <= 6) return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
-    if (digits.length <= 10) return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4, 6)}-${digits.slice(6)}`;
-    return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 10)}-${digits.slice(10)}`;
-}
-
-// Helper para estructurar el mensaje final y URL de WhatsApp
+// Helper para estructurar el mensaje final y URL de WhatsApp con el reporte
 function buildWhatsAppUrl(params) {
     if (typeof params === 'string') {
         return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(params)}`;
     }
 
-    const { nombre, edad, nss } = params;
-    const nssClean = sanitizeNSS(nss);
-    const nssDisplay = nssClean.length === 11 ? formatNSSDisplay(nssClean) : (nss && nss.trim() ? nss.trim() : 'No lo tengo a la mano');
+    const { nombre, edad, inicioLaboral } = params;
 
     const lines = [
-        `👋 *Hola Asesora, solicito información sobre Modalidad 40:*`,
+        `👋 *Hola Asesora, solicito asesoría sobre Modalidad 40:*`,
         ``,
+        `📋 *REPORTE PARA ASESORÍA:*`,
         `• *Nombre:* ${nombre ? nombre.trim() : 'No especificado'}`,
         `• *Edad:* ${edad} años`,
-        `• *NSS:* ${nssDisplay}`
+        `• *Año en que empezó a cotizar/trabajar:* ${inicioLaboral ? inicioLaboral : 'No especificado'}`,
+        ``,
+        `¿Me apoya revisando si soy candidato para pensión con la Ley 73 del IMSS?`
     ];
 
     return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 
 /* ==========================================================================
-   SISTEMA INTEGRADO DE FORMULARIOS Y CTAs DE WHATSAPP
+   CONTROLADOR DEL FORMULARIO PRINCIPAL EN EL HERO Y CTAs DE WHATSAPP
    ========================================================================== */
 function initLeadFormsAndCTAs() {
-    // 1. Elementos del Hero Form
     const heroForm = document.getElementById('hero-lead-form');
     const heroNombre = document.getElementById('hero-nombre');
     const heroEdad = document.getElementById('hero-edad');
-    const heroNss = document.getElementById('hero-nss');
+    const heroInicio = document.getElementById('hero-inicio');
     const heroSubmitBtn = document.getElementById('btn-hero-submit');
+
     const errHeroNombre = document.getElementById('err-hero-nombre');
     const errHeroEdad = document.getElementById('err-hero-edad');
+    const errHeroInicio = document.getElementById('err-hero-inicio');
 
-    // 2. Elementos del Modal Form
-    const modal = document.getElementById('modal-diagnostico-m40');
-    const modalClose = document.getElementById('m40-modal-close');
-    const modalForm = document.getElementById('form-pre-whatsapp');
-    const modalNombre = document.getElementById('diag-nombre');
-    const modalEdad = document.getElementById('diag-edad');
-    const modalNss = document.getElementById('diag-nss');
-    const modalSubmitBtn = document.getElementById('btn-submit-whatsapp-modal');
-    const errModalNombre = document.getElementById('err-diag-nombre');
-    const errModalEdad = document.getElementById('err-diag-edad');
-
-    // Estado compartido en memoria
     const state = {
         nombre: '',
         edad: '',
-        nss: ''
+        inicioLaboral: ''
     };
 
-    // Sincronización bidireccional entre inputs
-    const syncInputs = (field, value) => {
-        state[field] = value;
-        if (field === 'nombre') {
-            if (heroNombre && heroNombre.value !== value) heroNombre.value = value;
-            if (modalNombre && modalNombre.value !== value) modalNombre.value = value;
-        } else if (field === 'edad') {
-            if (heroEdad && heroEdad.value !== value) heroEdad.value = value;
-            if (modalEdad && modalEdad.value !== value) modalEdad.value = value;
-        } else if (field === 'nss') {
-            const formatted = value.length > 0 ? formatNSSDisplay(value) : '';
-            if (heroNss && heroNss.value !== formatted) heroNss.value = formatted;
-            if (modalNss && modalNss.value !== formatted) modalNss.value = formatted;
-        }
-    };
-
-    // Listeners para Hero
-    if (heroNombre) heroNombre.addEventListener('input', (e) => syncInputs('nombre', e.target.value));
-    if (heroEdad) heroEdad.addEventListener('input', (e) => syncInputs('edad', e.target.value));
-    if (heroNss) heroNss.addEventListener('input', (e) => syncInputs('nss', sanitizeNSS(e.target.value)));
-
-    // Listeners para Modal
-    if (modalNombre) modalNombre.addEventListener('input', (e) => syncInputs('nombre', e.target.value));
-    if (modalEdad) modalEdad.addEventListener('input', (e) => syncInputs('edad', e.target.value));
-    if (modalNss) modalNss.addEventListener('input', (e) => syncInputs('nss', sanitizeNSS(e.target.value)));
-
-    // Helpers para modal
-    const openModal = () => {
-        if (!modal) return;
-        modal.classList.add('is-active');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => {
-            if (modalNombre) modalNombre.focus();
-        }, 150);
-    };
-
-    const closeModal = () => {
-        if (!modal) return;
-        modal.classList.remove('is-active');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-    };
-
-    if (modalClose) modalClose.addEventListener('click', closeModal);
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
+    if (heroNombre) {
+        heroNombre.addEventListener('input', (e) => {
+            state.nombre = e.target.value;
+            if (state.nombre.trim().length >= 2 && errHeroNombre) {
+                heroNombre.classList.remove('is-invalid');
+                errHeroNombre.classList.remove('is-visible');
+            }
         });
     }
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal && modal.classList.contains('is-active')) closeModal();
-    });
 
-    // Validar y enviar WhatsApp
-    const handleFormSubmit = (btn, isModal = false) => {
+    if (heroEdad) {
+        heroEdad.addEventListener('input', (e) => {
+            state.edad = e.target.value;
+            const val = parseInt(state.edad, 10);
+            if (!isNaN(val) && val >= 25 && val <= 100 && errHeroEdad) {
+                heroEdad.classList.remove('is-invalid');
+                errHeroEdad.classList.remove('is-visible');
+            }
+        });
+    }
+
+    if (heroInicio) {
+        heroInicio.addEventListener('input', (e) => {
+            state.inicioLaboral = e.target.value;
+            const year = parseInt(state.inicioLaboral, 10);
+            if (!isNaN(year) && year >= 1940 && year <= 2026 && errHeroInicio) {
+                heroInicio.classList.remove('is-invalid');
+                errHeroInicio.classList.remove('is-visible');
+            }
+        });
+    }
+
+    const scrollToHeroAndFocus = () => {
+        const heroSection = document.getElementById('inicio');
+        if (heroSection) {
+            heroSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setTimeout(() => {
+            if (heroNombre) {
+                heroNombre.focus();
+                heroNombre.classList.add('is-invalid');
+                setTimeout(() => heroNombre.classList.remove('is-invalid'), 1500);
+            }
+        }, 500);
+    };
+
+    const submitLeadForm = () => {
         let valid = true;
-        const nombreVal = state.nombre.trim();
-        const edadVal = parseInt(state.edad, 10);
+        const nombreVal = heroNombre ? heroNombre.value.trim() : state.nombre.trim();
+        const edadVal = heroEdad ? parseInt(heroEdad.value, 10) : parseInt(state.edad, 10);
+        const inicioVal = heroInicio ? parseInt(heroInicio.value, 10) : parseInt(state.inicioLaboral, 10);
 
-        // Validar Nombre
+        // 1. Validar Nombre
         if (nombreVal.length < 2) {
             valid = false;
-            if (isModal) {
-                if (modalNombre) modalNombre.classList.add('is-invalid');
-                if (errModalNombre) errModalNombre.classList.add('is-visible');
-            } else {
-                if (heroNombre) heroNombre.classList.add('is-invalid');
-                if (errHeroNombre) errHeroNombre.classList.add('is-visible');
-            }
+            if (heroNombre) heroNombre.classList.add('is-invalid');
+            if (errHeroNombre) errHeroNombre.classList.add('is-visible');
         } else {
             if (heroNombre) heroNombre.classList.remove('is-invalid');
-            if (modalNombre) modalNombre.classList.remove('is-invalid');
             if (errHeroNombre) errHeroNombre.classList.remove('is-visible');
-            if (errModalNombre) errModalNombre.classList.remove('is-visible');
         }
 
-        // Validar Edad
+        // 2. Validar Edad
         if (isNaN(edadVal) || edadVal < 25 || edadVal > 100) {
             valid = false;
-            if (isModal) {
-                if (modalEdad) modalEdad.classList.add('is-invalid');
-                if (errModalEdad) errModalEdad.classList.add('is-visible');
-            } else {
-                if (heroEdad) heroEdad.classList.add('is-invalid');
-                if (errHeroEdad) errHeroEdad.classList.add('is-visible');
-            }
+            if (heroEdad) heroEdad.classList.add('is-invalid');
+            if (errHeroEdad) errHeroEdad.classList.add('is-visible');
         } else {
             if (heroEdad) heroEdad.classList.remove('is-invalid');
-            if (modalEdad) modalEdad.classList.remove('is-invalid');
             if (errHeroEdad) errHeroEdad.classList.remove('is-visible');
-            if (errModalEdad) errModalEdad.classList.remove('is-visible');
         }
 
-        if (!valid) return false;
+        // 3. Validar Año de Inicio Laboral
+        if (isNaN(inicioVal) || inicioVal < 1940 || inicioVal > 2026) {
+            valid = false;
+            if (heroInicio) heroInicio.classList.add('is-invalid');
+            if (errHeroInicio) errHeroInicio.classList.add('is-visible');
+        } else {
+            if (heroInicio) heroInicio.classList.remove('is-invalid');
+            if (errHeroInicio) errHeroInicio.classList.remove('is-visible');
+        }
 
-        // Construir URL de WhatsApp
+        if (!valid) {
+            scrollToHeroAndFocus();
+            return false;
+        }
+
+        // Generar enlace y abrir WhatsApp
         const waUrl = buildWhatsAppUrl({
             nombre: nombreVal,
             edad: edadVal,
-            nss: state.nss
+            inicioLaboral: inicioVal
         });
 
-        // Feedback en botón
-        if (btn) {
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<span>✓ Abriendo WhatsApp...</span>`;
-            btn.disabled = true;
+        if (heroSubmitBtn) {
+            const originalHtml = heroSubmitBtn.innerHTML;
+            heroSubmitBtn.innerHTML = `<span>✓ Abriendo WhatsApp...</span>`;
+            heroSubmitBtn.disabled = true;
             setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                if (isModal) closeModal();
-            }, 1200);
+                heroSubmitBtn.innerHTML = originalHtml;
+                heroSubmitBtn.disabled = false;
+            }, 1500);
         }
 
-        // Abrir WhatsApp en nueva pestaña
         window.open(waUrl, '_blank', 'noopener,noreferrer');
         return true;
     };
 
-    // 3. Listener en Submit del Hero
+    // Escuchar el submit del formulario del Hero
     if (heroForm) {
         heroForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            handleFormSubmit(heroSubmitBtn, false);
+            submitLeadForm();
         });
     }
 
-    // 4. Listener en Submit del Modal
-    if (modalForm) {
-        modalForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            handleFormSubmit(modalSubmitBtn, true);
-        });
-    }
-
-    // 5. Vincular todos los CTAs de WhatsApp en cualquier lugar de la página
+    // Vincular todos los demás botones de WhatsApp de la página al formulario
     const allWhatsAppCTAs = document.querySelectorAll('[data-cta-whatsapp], a[href*="wa.me"]');
     allWhatsAppCTAs.forEach((cta) => {
         cta.addEventListener('click', (e) => {
             e.preventDefault();
 
-            // Si los datos ya están completos, enviar directo
-            if (state.nombre.trim().length >= 2 && !isNaN(parseInt(state.edad, 10))) {
-                handleFormSubmit(cta, false);
-                return;
-            }
+            const nombreVal = heroNombre ? heroNombre.value.trim() : '';
+            const edadVal = heroEdad ? parseInt(heroEdad.value, 10) : NaN;
+            const inicioVal = heroInicio ? parseInt(heroInicio.value, 10) : NaN;
 
-            // Si el usuario está cerca del Hero, enfocar el Hero form
-            const heroSection = document.getElementById('inicio');
-            const heroRect = heroSection ? heroSection.getBoundingClientRect() : null;
-            const isHeroVisible = heroRect && heroRect.top >= -200 && heroRect.bottom >= 300;
-
-            if (isHeroVisible && heroNombre) {
-                heroNombre.focus();
-                heroNombre.classList.add('is-invalid');
-                setTimeout(() => heroNombre.classList.remove('is-invalid'), 1200);
+            // Si ya llenó los 3 datos en el Hero, enviar directo
+            if (nombreVal.length >= 2 && !isNaN(edadVal) && !isNaN(inicioVal)) {
+                submitLeadForm();
             } else {
-                openModal();
+                // Si faltan datos, llevarlo directamente al formulario del principio
+                scrollToHeroAndFocus();
             }
         });
     });
@@ -361,7 +307,7 @@ function initNavbarScroll() {
     }, { passive: true });
 }
 
-// Inicializar en navegador
+// Inicializar al cargar en navegador
 if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', () => {
         initSimulator();
@@ -374,8 +320,6 @@ if (typeof document !== 'undefined') {
 // Exportar para tests y swarm
 export {
     CONFIG,
-    sanitizeNSS,
-    formatNSSDisplay,
     buildWhatsAppUrl,
     formatCurrency
 };

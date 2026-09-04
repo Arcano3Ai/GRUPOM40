@@ -1,8 +1,8 @@
 import { BaseAgent } from './baseAgent.js';
-import { sanitizeNSS, formatNSSDisplay, buildWhatsAppUrl } from '../js/app.js';
+import { buildWhatsAppUrl, formatCurrency } from '../js/app.js';
 
 /**
- * QAAgent: Pruebas unitarias para el flujo simplificado de WhatsApp.
+ * QAAgent: Pruebas unitarias para el reporte de WhatsApp (Nombre, Edad, Año de Inicio).
  */
 export class QAAgent extends BaseAgent {
   constructor() {
@@ -10,7 +10,7 @@ export class QAAgent extends BaseAgent {
   }
 
   async execute(task) {
-    this.log('Iniciando suite de pruebas QA para formulario simplificado...');
+    this.log('Iniciando suite de pruebas QA para reporte al asesor...');
     const testResults = [];
     let allPassed = true;
 
@@ -26,36 +26,22 @@ export class QAAgent extends BaseAgent {
       }
     };
 
-    runTest('sanitizeNSS filtra caracteres a 11 dígitos', () => {
-      const clean = sanitizeNSS('45-89-66-1234-1');
-      if (clean !== '45896612341') throw new Error(`NSS inválido: ${clean}`);
-    });
-
-    runTest('formatNSSDisplay aplica formato institucional', () => {
-      const fmt = formatNSSDisplay('45896612341');
-      if (fmt !== '45-89-66-1234-1') throw new Error(`Formato incorrecto: ${fmt}`);
-    });
-
-    runTest('buildWhatsAppUrl incluye nombre, edad y NSS al asesor', () => {
+    runTest('buildWhatsAppUrl estructura el reporte con nombre, edad y año de inicio', () => {
       const url = buildWhatsAppUrl({
         nombre: 'Guillermo Treviño',
-        edad: 59,
-        nss: '45896612341'
+        edad: 58,
+        inicioLaboral: 1985
       });
       const decoded = decodeURIComponent(url);
       if (!decoded.includes('Guillermo Treviño')) throw new Error('Falta nombre');
-      if (!decoded.includes('59 años')) throw new Error('Falta edad');
-      if (!decoded.includes('45-89-66-1234-1')) throw new Error('Falta NSS');
+      if (!decoded.includes('58 años')) throw new Error('Falta edad');
+      if (!decoded.includes('1985')) throw new Error('Falta año de inicio');
+      if (!decoded.includes('Ley 73')) throw new Error('Falta referencia a Ley 73');
     });
 
-    runTest('buildWhatsAppUrl maneja si no tiene NSS a la mano', () => {
-      const url = buildWhatsAppUrl({
-        nombre: 'Carlos López',
-        edad: 52,
-        nss: ''
-      });
-      const decoded = decodeURIComponent(url);
-      if (!decoded.includes('No lo tengo a la mano')) throw new Error('Debería indicar que no lo tiene a la mano');
+    runTest('formatCurrency formatea montos en moneda mexicana correctamente', () => {
+      const formatted = formatCurrency(50000);
+      if (!formatted.includes('50,000')) throw new Error(`Formato incorrecto: ${formatted}`);
     });
 
     this.log(`Resultados QA: ${testResults.filter(t => t.passed).length}/${testResults.length} pruebas pasadas.`);
