@@ -26,7 +26,7 @@ function buildWhatsAppUrl(params) {
         return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(params)}`;
     }
 
-    const { nombre, edad, inicioLaboral } = params || {};
+    const { nombre, edad, inicioLaboral, telefono, email } = params || {};
     const year = parseInt(inicioLaboral, 10);
     const ley73Status = (!isNaN(year) && year < 1997)
         ? 'Candidato a Ley 73 (Inició antes del 1 de julio de 1997)'
@@ -37,6 +37,8 @@ function buildWhatsAppUrl(params) {
         '',
         'SITUACIÓN DEL CLIENTE:',
         '• Nombre: ' + (nombre && nombre.trim() ? nombre.trim() : 'Por especificar'),
+        '• Teléfono: ' + (telefono && telefono.trim() ? telefono.trim() : 'Por especificar'),
+        '• Correo: ' + (email && email.trim() ? email.trim() : 'Por especificar'),
         '• Edad: ' + (edad ? edad + ' años' : 'Por especificar'),
         '• Año en que empezó a cotizar/trabajar: ' + (inicioLaboral ? inicioLaboral : 'Por especificar'),
         '• Diagnóstico preliminar: ' + ley73Status,
@@ -52,16 +54,22 @@ function submitHeroLeadForm() {
     const heroNombre = document.getElementById('hero-nombre');
     const heroEdad = document.getElementById('hero-edad');
     const heroInicio = document.getElementById('hero-inicio');
+    const heroTelefono = document.getElementById('hero-telefono');
+    const heroEmail = document.getElementById('hero-email');
     const heroSubmitBtn = document.getElementById('btn-hero-submit');
 
     const nombreVal = (heroNombre && heroNombre.value) ? heroNombre.value.trim() : '';
     const edadVal = (heroEdad && heroEdad.value) ? heroEdad.value.trim() : '';
     const inicioVal = (heroInicio && heroInicio.value) ? heroInicio.value.trim() : '';
+    const telefonoVal = (heroTelefono && heroTelefono.value) ? heroTelefono.value.trim() : '';
+    const emailVal = (heroEmail && heroEmail.value) ? heroEmail.value.trim() : '';
 
     const waUrl = buildWhatsAppUrl({
         nombre: nombreVal,
         edad: edadVal,
-        inicioLaboral: inicioVal
+        inicioLaboral: inicioVal,
+        telefono: telefonoVal,
+        email: emailVal
     });
 
     if (heroSubmitBtn) {

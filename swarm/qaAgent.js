@@ -26,14 +26,18 @@ export class QAAgent extends BaseAgent {
       }
     };
 
-    runTest('buildWhatsAppUrl estructura el reporte con nombre, edad, año de inicio y situación del cliente', () => {
+    runTest('buildWhatsAppUrl estructura el reporte con nombre, edad, año de inicio, teléfono, correo y situación del cliente', () => {
       const url = buildWhatsAppUrl({
         nombre: 'Guillermo Treviño',
+        telefono: '55 1234 5678',
+        email: 'guillermo@ejemplo.com',
         edad: 58,
         inicioLaboral: 1985
       });
       const decoded = decodeURIComponent(url);
       if (!decoded.includes('Guillermo Treviño')) throw new Error('Falta nombre');
+      if (!decoded.includes('55 1234 5678')) throw new Error('Falta teléfono');
+      if (!decoded.includes('guillermo@ejemplo.com')) throw new Error('Falta correo');
       if (!decoded.includes('58 años')) throw new Error('Falta edad');
       if (!decoded.includes('1985')) throw new Error('Falta año de inicio');
       if (!decoded.includes('Ley 73')) throw new Error('Falta referencia a Ley 73');

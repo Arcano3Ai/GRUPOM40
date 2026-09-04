@@ -5,6 +5,8 @@ import { buildWhatsAppUrl, formatCurrency, CONFIG } from '../js/core.js';
 test('buildWhatsAppUrl - Caso 1: Candidato clásico a Ley 73 (inició antes de 1997)', () => {
   const payload = {
     nombre: 'Guillermo Treviño',
+    telefono: '55 1234 5678',
+    email: 'guillermo@ejemplo.com',
     edad: 58,
     inicioLaboral: 1985
   };
@@ -13,6 +15,8 @@ test('buildWhatsAppUrl - Caso 1: Candidato clásico a Ley 73 (inició antes de 1
   assert.ok(url.startsWith(`https://wa.me/${CONFIG.PHONE}?text=`));
   const decoded = decodeURIComponent(url);
   assert.ok(decoded.includes('Guillermo Treviño'));
+  assert.ok(decoded.includes('55 1234 5678'));
+  assert.ok(decoded.includes('guillermo@ejemplo.com'));
   assert.ok(decoded.includes('58 años'));
   assert.ok(decoded.includes('1985'));
   assert.ok(decoded.includes('Candidato a Ley 73 (Inició antes del 1 de julio de 1997)'));

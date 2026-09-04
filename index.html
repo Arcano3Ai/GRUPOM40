@@ -251,7 +251,7 @@
                     <form id="hero-lead-form" class="hero-quick-form" onsubmit="submitHeroLeadForm(); return false;">
                         <div class="form-title-lead">
                             <h4>Inicia tu Consulta con la Asesora</h4>
-                            <p>Déjanos estos 3 datos básicos para atenderte de inmediato por WhatsApp:</p>
+                            <p>Déjanos tus datos de contacto para atenderte de inmediato por WhatsApp:</p>
                         </div>
 
                         <div class="quick-field">
@@ -268,6 +268,16 @@
                             <label for="hero-inicio">3. ¿En qué Año Empezaste a Trabajar / Cotizar?</label>
                             <input type="number" id="hero-inicio" name="inicioLaboral" class="quick-input" placeholder="Ej. 1985 (Clave para Ley 73)" min="1940" max="2026">
                             <span class="quick-hint">💡 Clave para confirmar si eres candidato a la Ley 73 (antes del 1 de julio de 1997).</span>
+                        </div>
+
+                        <div class="quick-field">
+                            <label for="hero-telefono">4. Número de Teléfono / WhatsApp</label>
+                            <input type="tel" id="hero-telefono" name="telefono" class="quick-input" placeholder="Ej. 55 1234 5678" autocomplete="tel">
+                        </div>
+
+                        <div class="quick-field">
+                            <label for="hero-email">5. Correo Electrónico</label>
+                            <input type="email" id="hero-email" name="email" class="quick-input" placeholder="ejemplo@correo.com" autocomplete="email">
                         </div>
 
                         <button type="button" class="btn-whatsapp hero-submit-btn" id="btn-hero-submit" onclick="submitHeroLeadForm();">

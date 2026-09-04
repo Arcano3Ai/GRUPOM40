@@ -27,6 +27,8 @@ export class FrontendAgent extends BaseAgent {
       { id: 'hero-nombre', name: 'Nombre Completo' },
       { id: 'hero-edad', name: 'Edad' },
       { id: 'hero-inicio', name: 'Año de Inicio Laboral' },
+      { id: 'hero-telefono', name: 'Teléfono / WhatsApp' },
+      { id: 'hero-email', name: 'Correo Electrónico' },
       { id: 'btn-hero-submit', name: 'Botón de Envío' }
     ];
 

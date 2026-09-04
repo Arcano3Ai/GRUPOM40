@@ -23,7 +23,7 @@ export function buildWhatsAppUrl(params) {
         return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(params)}`;
     }
 
-    const { nombre, edad, inicioLaboral } = params || {};
+    const { nombre, edad, inicioLaboral, telefono, email } = params || {};
     const year = parseInt(inicioLaboral, 10);
     const ley73Status = (!isNaN(year) && year < 1997)
         ? 'Candidato a Ley 73 (Inició antes del 1 de julio de 1997)'
@@ -34,6 +34,8 @@ export function buildWhatsAppUrl(params) {
         '',
         'SITUACIÓN DEL CLIENTE:',
         '• Nombre: ' + (nombre && nombre.trim() ? nombre.trim() : 'Por especificar'),
+        '• Teléfono: ' + (telefono && telefono.trim() ? telefono.trim() : 'Por especificar'),
+        '• Correo: ' + (email && email.trim() ? email.trim() : 'Por especificar'),
         '• Edad: ' + (edad ? edad + ' años' : 'Por especificar'),
         '• Año en que empezó a cotizar/trabajar: ' + (inicioLaboral ? inicioLaboral : 'Por especificar'),
         '• Diagnóstico preliminar: ' + ley73Status,
