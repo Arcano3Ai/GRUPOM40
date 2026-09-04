@@ -17,7 +17,10 @@ function formatCurrency(val) {
         style: 'currency',
         currency: 'MXN',
         maximumFractionDigits: 0
-    }).format(val)// Helper para estructurar el mensaje final y URL de WhatsApp con la situación del cliente
+    }).format(val);
+}
+
+// Helper para estructurar el mensaje final y URL de WhatsApp con la situación del cliente
 function buildWhatsAppUrl(params) {
     if (typeof params === 'string') {
         return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(params)}`;
