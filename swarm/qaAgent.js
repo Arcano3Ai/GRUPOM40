@@ -1,5 +1,5 @@
 import { BaseAgent } from './baseAgent.js';
-import { buildWhatsAppUrl, formatCurrency } from '../js/app.js';
+import { buildWhatsAppUrl, formatCurrency } from '../js/core.js';
 
 /**
  * QAAgent: Pruebas unitarias para el reporte de WhatsApp (Nombre, Edad, Año de Inicio).
@@ -26,7 +26,7 @@ export class QAAgent extends BaseAgent {
       }
     };
 
-    runTest('buildWhatsAppUrl estructura el reporte con nombre, edad y año de inicio', () => {
+    runTest('buildWhatsAppUrl estructura el reporte con nombre, edad, año de inicio y situación del cliente', () => {
       const url = buildWhatsAppUrl({
         nombre: 'Guillermo Treviño',
         edad: 58,
@@ -37,6 +37,7 @@ export class QAAgent extends BaseAgent {
       if (!decoded.includes('58 años')) throw new Error('Falta edad');
       if (!decoded.includes('1985')) throw new Error('Falta año de inicio');
       if (!decoded.includes('Ley 73')) throw new Error('Falta referencia a Ley 73');
+      if (!decoded.includes('SITUACIÓN DEL CLIENTE')) throw new Error('Falta situación del cliente');
     });
 
     runTest('formatCurrency formatea montos en moneda mexicana correctamente', () => {

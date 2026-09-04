@@ -248,7 +248,7 @@
                     </div>
 
                     <!-- FORMULARIO DIRECTO AL PRINCIPIO -->
-                    <form id="hero-lead-form" class="hero-quick-form" onsubmit="return false;" novalidate>
+                    <form id="hero-lead-form" class="hero-quick-form" onsubmit="event.preventDefault(); if(window.submitHeroLeadForm){ window.submitHeroLeadForm(); } return false;" novalidate>
                         <div class="form-title-lead">
                             <h4>Inicia tu Consulta con la Asesora</h4>
                             <p>Déjanos estos 3 datos básicos para atenderte de inmediato por WhatsApp:</p>
@@ -273,7 +273,7 @@
                             <span class="quick-hint">💡 Clave para confirmar si eres candidato a la Ley 73 (antes del 1 de julio de 1997).</span>
                         </div>
 
-                        <button type="submit" class="btn-whatsapp hero-submit-btn" id="btn-hero-submit">
+                        <button type="submit" class="btn-whatsapp hero-submit-btn" id="btn-hero-submit" onclick="if(window.submitHeroLeadForm){ window.submitHeroLeadForm(); }">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.073-2.127-.521-1.615-.67-2.66-2.307-2.74-2.414-.081-.108-.654-.87-.654-1.66 0-.79.413-1.179.56-1.341.147-.162.32-.203.427-.203.107 0 .214.002.307.007.1.005.234-.038.366.279.136.327.468 1.141.509 1.224.041.083.069.18.014.288-.055.109-.083.176-.164.272-.082.096-.172.215-.246.289-.082.082-.168.172-.072.337.096.165.426.703.914 1.137.629.56 1.16.733 1.325.815.165.083.262.069.359-.042.097-.111.413-.48.523-.644.11-.165.22-.138.371-.083.151.055.955.45 1.12.533.165.083.275.124.316.193.041.069.041.405-.103.81z"/>
                             </svg>

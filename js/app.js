@@ -20,23 +20,28 @@ function formatCurrency(val) {
     }).format(val);
 }
 
-// Helper para estructurar el mensaje final y URL de WhatsApp con el reporte
+// Helper para estructurar el mensaje final y URL de WhatsApp con la situación del cliente
 function buildWhatsAppUrl(params) {
     if (typeof params === 'string') {
         return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(params)}`;
     }
 
-    const { nombre, edad, inicioLaboral } = params;
+    const { nombre, edad, inicioLaboral } = params || {};
+    const year = parseInt(inicioLaboral, 10);
+    const ley73Status = (!isNaN(year) && year < 1997)
+        ? '✅ Candidato a Régimen Ley 73 (Inició a cotizar antes del 1 de julio de 1997)'
+        : '⚠️ Inició cotizaciones en o después de 1997 (Requiere revisión de régimen)';
 
     const lines = [
         `👋 *Hola Asesora, solicito asesoría sobre Modalidad 40:*`,
         ``,
-        `📋 *REPORTE PARA ASESORÍA:*`,
+        `📋 *SITUACIÓN DEL CLIENTE:*`,
         `• *Nombre:* ${nombre ? nombre.trim() : 'No especificado'}`,
-        `• *Edad:* ${edad} años`,
+        `• *Edad:* ${edad ? edad : 'No especificada'} años`,
         `• *Año en que empezó a cotizar/trabajar:* ${inicioLaboral ? inicioLaboral : 'No especificado'}`,
+        `• *Diagnóstico preliminar:* ${ley73Status}`,
         ``,
-        `¿Me apoya revisando si soy candidato para pensión con la Ley 73 del IMSS?`
+        `¿Me apoya revisando si soy candidato para pensión con la Ley 73 del IMSS y proyectar mi pensión máxima?`
     ];
 
     return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(lines.join('\n'))}`;
@@ -179,6 +184,11 @@ function initLeadFormsAndCTAs() {
         return true;
     };
 
+    // Exponer globalmente para ejecución directa e infalible desde botón o inline handler
+    if (typeof window !== 'undefined') {
+        window.submitHeroLeadForm = submitLeadForm;
+    }
+
     // Escuchar el submit del formulario del Hero
     if (heroForm) {
         heroForm.addEventListener('submit', (e) => {
@@ -316,19 +326,25 @@ function initNavbarScroll() {
     }, { passive: true });
 }
 
-// Inicializar al cargar en navegador
-if (typeof document !== 'undefined') {
-    document.addEventListener('DOMContentLoaded', () => {
-        initSimulator();
-        initFaqAccordion();
-        initNavbarScroll();
-        initLeadFormsAndCTAs();
-    });
+// Inicialización robusta para navegador
+function initAll() {
+    initSimulator();
+    initFaqAccordion();
+    initNavbarScroll();
+    initLeadFormsAndCTAs();
 }
 
-// Exportar para tests y swarm
-export {
-    CONFIG,
-    buildWhatsAppUrl,
-    formatCurrency
-};
+if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAll);
+    } else {
+        initAll();
+    }
+}
+
+// Exponer al objeto global para acceso directo e infalible en browser
+if (typeof window !== 'undefined') {
+    window.CONFIG = CONFIG;
+    window.buildWhatsAppUrl = buildWhatsAppUrl;
+    window.formatCurrency = formatCurrency;
+}

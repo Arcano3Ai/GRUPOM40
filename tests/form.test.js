@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildWhatsAppUrl, formatCurrency } from '../js/app.js';
+import { buildWhatsAppUrl, formatCurrency } from '../js/core.js';
 
-test('buildWhatsAppUrl estructura el reporte con nombre, edad y año de inicio', () => {
+test('buildWhatsAppUrl estructura el reporte con nombre, edad, año de inicio y situación del cliente', () => {
   const payload = {
     nombre: 'Guillermo Treviño',
     edad: 58,
@@ -16,9 +16,11 @@ test('buildWhatsAppUrl estructura el reporte con nombre, edad y año de inicio',
   assert.ok(decoded.includes('58 años'));
   assert.ok(decoded.includes('1985'));
   assert.ok(decoded.includes('Ley 73'));
+  assert.ok(decoded.includes('SITUACIÓN DEL CLIENTE'));
 });
 
 test('formatCurrency formatea montos en pesos mexicanos', () => {
   const formatted = formatCurrency(45000);
   assert.ok(formatted.includes('45,000'));
 });
+
