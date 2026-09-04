@@ -1,0 +1,11 @@
+{
+  "name": "grupo-modalidad-40",
+  "private": true,
+  "version": "1.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/form.test.js",
+    "swarm": "node swarm/index.js"
+  }
+}
