@@ -1720,3 +1720,309 @@ button, input {
     }
 }
 
+/* ==========================================================================
+   SECCIÓN DE PLANES DE ASESORÍA (PRESENCIAL $3,500 & ONLINE $2,500)
+   ========================================================================== */
+.pricing-section {
+    background-color: var(--color-bg-light);
+    padding: 5rem 0;
+    position: relative;
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1040px;
+    margin: 2.5rem auto 0 auto;
+    align-items: stretch;
+}
+
+@media (min-width: 768px) {
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.pricing-card {
+    background: #FFFFFF;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-border);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.pricing-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Destacado Plan Presencial */
+.pricing-card.is-featured {
+    border-color: #0F2744;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%);
+    box-shadow: 0 12px 36px rgba(15, 39, 68, 0.14);
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card.is-featured::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #D4AF37 0%, #F59E0B 50%, #00A884 100%);
+}
+
+.featured-ribbon {
+    position: absolute;
+    top: 18px;
+    right: -32px;
+    background: linear-gradient(135deg, #D4AF37 0%, #B48A18 100%);
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 2.8rem;
+    transform: rotate(45deg);
+    box-shadow: 0 4px 10px rgba(180, 138, 24, 0.3);
+    text-transform: uppercase;
+}
+
+/* Encabezados de Plan */
+.plan-header {
+    margin-bottom: 1.75rem;
+}
+
+.plan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+    margin-bottom: 0.85rem;
+}
+
+.badge-online {
+    background-color: #E0F2FE;
+    color: #0369A1;
+    border: 1px solid #BAE6FD;
+}
+
+.badge-presencial {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
+.plan-name {
+    font-family: var(--font-heading);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+}
+
+.plan-tagline {
+    font-size: 0.92rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    min-height: 2.8rem;
+}
+
+/* Caja de Precios */
+.plan-price-box {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.price-val {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+}
+
+.price-currency {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-primary-light);
+}
+
+.price-currency-code {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-left: 0.3rem;
+}
+
+.price-type {
+    display: block;
+    font-size: 0.82rem;
+    color: #16A34A;
+    font-weight: 700;
+    margin-top: 0.45rem;
+}
+
+/* Cuerpo con Lista de Beneficios */
+.plan-body {
+    flex-grow: 1;
+    margin-bottom: 2rem;
+}
+
+.plan-features-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 1.1rem;
+}
+
+.plan-features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.plan-features-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.94rem;
+    color: var(--color-text-main);
+    line-height: 1.45;
+}
+
+.feature-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--color-accent);
+    margin-top: 2px;
+}
+
+.feature-icon.icon-gold {
+    color: #D97706;
+}
+
+.feature-highlight {
+    background-color: rgba(245, 158, 11, 0.07);
+    padding: 0.5rem 0.65rem;
+    border-radius: var(--radius-sm);
+    margin: 0 -0.65rem;
+}
+
+/* Botones de Acción para Planes */
+.plan-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.btn-plan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 1rem 1.4rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: inherit;
+    border-radius: var(--radius-full);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-plan-online {
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 4px 14px rgba(15, 39, 68, 0.2);
+}
+
+.btn-plan-online:hover {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 39, 68, 0.3);
+}
+
+.btn-plan-presencial {
+    background-color: var(--color-whatsapp);
+    color: #FFFFFF;
+    border: 2px solid var(--color-whatsapp);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+}
+
+.btn-plan-presencial:hover {
+    background-color: #1EBE5D;
+    border-color: #1EBE5D;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45);
+}
+
+/* Caja de Garantía y Confianza */
+.pricing-guarantee-box {
+    margin-top: 3.5rem;
+    background: #FFFFFF;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.75rem 2rem;
+    text-align: center;
+    max-width: 860px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: var(--shadow-sm);
+}
+
+.guarantee-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+.guarantee-text {
+    font-size: 0.92rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .pricing-card {
+        padding: 2rem 1.35rem;
+    }
+    .price-val {
+        font-size: 2.5rem;
+    }
+    .plan-tagline {
+        min-height: auto;
+    }
+}
+
+

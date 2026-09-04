@@ -153,8 +153,8 @@
             <nav>
                 <ul class="nav-menu">
                     <li><a href="#beneficios" class="nav-link">Beneficios</a></li>
-                    <li><a href="#simulador" class="nav-link">Simulador Exprés</a></li>
                     <li><a href="#testimonios" class="nav-link">Casos de Éxito</a></li>
+                    <li><a href="#planes" class="nav-link">Planes</a></li>
                     <li><a href="#faq" class="nav-link">Preguntas</a></li>
                     <li>
                         <a href="https://wa.me/5212206494278?text=Hola%20Asesora,%20quiero%20agendar%20mi%20diagnóstico%20gratuito%20de%20Modalidad%2040" 
@@ -215,8 +215,8 @@
                             </svg>
                             <span>Solicitar Diagnóstico por WhatsApp</span>
                         </a>
-                        <a href="#simulador" class="btn-secondary">
-                            <span>Calcular en Simulador</span>
+                        <a href="#planes" class="btn-secondary">
+                            <span>Ver Planes de Asesoría</span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
                             </svg>
@@ -273,11 +273,6 @@
                         <div class="quick-field">
                             <label for="hero-telefono">4. Número de Teléfono / WhatsApp</label>
                             <input type="tel" id="hero-telefono" name="telefono" class="quick-input" placeholder="Ej. 55 1234 5678" autocomplete="tel">
-                        </div>
-
-                        <div class="quick-field">
-                            <label for="hero-email">5. Correo Electrónico</label>
-                            <input type="email" id="hero-email" name="email" class="quick-input" placeholder="ejemplo@correo.com" autocomplete="email">
                         </div>
 
                         <button type="button" class="btn-whatsapp hero-submit-btn" id="btn-hero-submit" onclick="submitHeroLeadForm();">
@@ -339,104 +334,6 @@
                        rel="noopener">
                         <span>💬 Preguntar a la Asesora si cumplo los requisitos</span>
                     </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECCIÓN: SIMULADOR EXPRÉS LEY 73 (LEAD MAGNET) -->
-        <section class="simulator-section" id="simulador">
-            <div class="container">
-                <div class="section-title-wrap" style="color: #FFFFFF; margin-bottom: 2.5rem;">
-                    <span class="section-tag" style="color: #4ADE80;">Herramienta Interactiva 2026</span>
-                    <h2 class="section-title" style="color: #FFFFFF;">Simulador de Pensión Modalidad 40</h2>
-                    <p class="section-subtitle" style="color: #CBD5E1;">
-                        Descubre cómo cambia tu pensión aumentando semanas y salario con la asesoría adecuada.
-                    </p>
-                </div>
-
-                <div class="simulator-box">
-                    <div class="simulator-layout">
-                        <!-- Controles del Simulador -->
-                        <div class="simulator-inputs">
-                            <!-- Slider 1: Semanas Cotizadas -->
-                            <div class="sim-input-group">
-                                <div class="sim-label-row">
-                                    <label for="sim-weeks-range" class="sim-label">Tus semanas cotizadas actuales:</label>
-                                    <span class="sim-val-pill" id="sim-weeks-val">900 semanas</span>
-                                </div>
-                                <input type="range" id="sim-weeks-range" class="sim-slider" min="500" max="1800" step="25" value="900">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.35rem;">
-                                    <span>500 semanas (Mínimo)</span>
-                                    <span>1,800+ semanas</span>
-                                </div>
-                            </div>
-
-                            <!-- Slider 2: Años a invertir en M40 -->
-                            <div class="sim-input-group">
-                                <div class="sim-label-row">
-                                    <label for="sim-years-range" class="sim-label">Tiempo a invertir en Modalidad 40:</label>
-                                    <span class="sim-val-pill" id="sim-years-val">5 años</span>
-                                </div>
-                                <input type="range" id="sim-years-range" class="sim-slider" min="1" max="5" step="1" value="5">
-                                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--color-text-light); margin-top: 0.35rem;">
-                                    <span>1 año</span>
-                                    <span>3 años</span>
-                                    <span>5 años (Máximo impacto)</span>
-                                </div>
-                            </div>
-
-                            <!-- Selector: Nivel de Salario M40 -->
-                            <div class="sim-input-group" style="margin-bottom: 0;">
-                                <div class="sim-label-row">
-                                    <label for="sim-salary-level" class="sim-label">Nivel de aportación salarial:</label>
-                                </div>
-                                <select id="sim-salary-level" class="sim-select">
-                                    <option value="25" selected>25 UMAs (Tope máximo - Mayor pensión)</option>
-                                    <option value="20">20 UMAs (Intermedio alto)</option>
-                                    <option value="15">15 UMAs (Económico equilibrado)</option>
-                                    <option value="10">10 UMAs (Básico)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Panel de Resultados del Simulador -->
-                        <div class="sim-result-card">
-                            <span class="sim-result-badge">Proyección Estimada Ley 73</span>
-                            <p class="sim-result-title">Pensión Mensual Estimada</p>
-                            <div class="sim-pension-amount" id="sim-pension-result">$48,500</div>
-                            <p class="sim-baseline-note">
-                                *Incluye asignaciones de ley y decreto presidencial.
-                            </p>
-
-                            <div class="sim-metrics-grid">
-                                <div class="sim-metric-item">
-                                    <span class="sim-metric-val" id="sim-total-weeks">1,160 sem</span>
-                                    <span class="sim-metric-lbl">Semanas al Retiro</span>
-                                </div>
-                                <div class="sim-metric-item">
-                                    <span class="sim-metric-val" id="sim-cost-result">$12,850</span>
-                                    <span class="sim-metric-lbl">Inversión Mensual Aprox</span>
-                                </div>
-                            </div>
-
-                            <!-- CTA Dinámico que envía el cálculo por WhatsApp -->
-                            <a href="#" 
-                               id="sim-whatsapp-cta" 
-                               class="btn-whatsapp sim-cta-whatsapp"
-                               data-cta-whatsapp="simulator_result"
-                               target="_blank" 
-                               rel="noopener">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.073-2.127-.521-1.615-.67-2.66-2.307-2.74-2.414-.081-.108-.654-.87-.654-1.66 0-.79.413-1.179.56-1.341.147-.162.32-.203.427-.203.107 0 .214.002.307.007.1.005.234-.038.366.279.136.327.468 1.141.509 1.224.041.083.069.18.014.288-.055.109-.083.176-.164.272-.082.096-.172.215-.246.289-.082.082-.168.172-.072.337.096.165.426.703.914 1.137.629.56 1.16.733 1.325.815.165.083.275.124.316.193.041.069.041.405-.103.81z"/>
-                                </svg>
-                                <span>Enviar este Cálculo a la Asesora</span>
-                            </a>
-
-                            <p class="sim-disclaimer">
-                                Los montos finales dependen de tu salario histórico exacto y edad de retiro. La asesora te brindará el cálculo exacto sin costo.
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -561,6 +458,166 @@
                        rel="noopener">
                         <span>Iniciar Mi Diagnóstico Paso a Paso</span>
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN: PLANES DE ASESORÍA (PRESENCIAL Y ONLINE) -->
+        <section class="section pricing-section" id="planes">
+            <div class="container">
+                <div class="section-title-wrap">
+                    <span class="section-tag">Inversión Transparente y Sin Letras Chiquitas</span>
+                    <h2 class="section-title">Planes de Asesoría Especializada en Modalidad 40</h2>
+                    <p class="section-subtitle">
+                        Elige el esquema que mejor se adapte a tus necesidades: asesoría remota para todo México o atención presencial integral en oficina con revisión física de expedientes.
+                    </p>
+                </div>
+
+                <div class="pricing-grid">
+                    <!-- PLAN ONLINE -->
+                    <div class="pricing-card plan-online">
+                        <div class="plan-header">
+                            <span class="plan-badge badge-online">🌐 Cobertura Nacional</span>
+                            <h3 class="plan-name">Plan Online</h3>
+                            <p class="plan-tagline">Asesoría estratégica 100% remota para cualquier estado del país.</p>
+                            <div class="plan-price-box">
+                                <div class="price-val"><span class="price-currency">$</span>2,500 <span class="price-currency-code">MXN</span></div>
+                                <span class="price-type">Pago único • Sin mensualidades ocultas</span>
+                            </div>
+                        </div>
+
+                        <div class="plan-body">
+                            <p class="plan-features-label">¿Qué incluye tu asesoría online?</p>
+                            <ul class="plan-features-list">
+                                <li>
+                                    <svg class="feature-icon" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Sesión estratégica 1 a 1</strong> por videollamada o llamada telefónica directa.</span>
+                                </li>
+                                <li>
+                                    <svg class="feature-icon" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Auditoría completa</strong> de tus semanas cotizadas y vigencia de derechos en el IMSS.</span>
+                                </li>
+                                <li>
+                                    <svg class="feature-icon" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Cálculo y simulación</strong> de escenarios de pensión y retorno de inversión óptimo (ROI).</span>
+                                </li>
+                                <li>
+                                    <svg class="feature-icon" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Carpeta digital (PDF)</strong> con tu proyecto de pensión y calendario de pagos estimados.</span>
+                                </li>
+                                <li>
+                                    <svg class="feature-icon" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Guía paso a paso</strong> para realizar tus pagos y trámites bancarios oficiales.</span>
+                                </li>
+                                <li>
+                                    <svg class="feature-icon" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Soporte continuo por WhatsApp</strong> para resolver dudas en cada fase de tu trámite.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="plan-footer">
+                            <a href="https://wa.me/5212206494278?text=Hola%20Asesora,%20me%20interesa%20contratar%20el%20Plan%20Online%20($2,500%20MXN)%20para%20mi%20asesoría%20personalizada%20de%20Modalidad%2040." 
+                               class="btn-plan btn-plan-online" 
+                               data-cta-whatsapp="plan_online"
+                               target="_blank" 
+                               rel="noopener">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.073-2.127-.521-1.615-.67-2.66-2.307-2.74-2.414-.081-.108-.654-.87-.654-1.66 0-.79.413-1.179.56-1.341.147-.162.32-.203.427-.203.107 0 .214.002.307.007.1.005.234-.038.366.279.136.327.468 1.141.509 1.224.041.083.069.18.014.288-.055.109-.083.176-.164.272-.082.096-.172.215-.246.289-.082.082-.168.172-.072.337.096.165.426.703.914 1.137.629.56 1.16.733 1.325.815.165.083.275.124.316.193.041.069.041.405-.103.81z"/>
+                                </svg>
+                                <span>Contratar Plan Online ($2,500 MXN)</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- PLAN PRESENCIAL (DESTACADO / TODO INCLUIDO) -->
+                    <div class="pricing-card plan-presencial is-featured">
+                        <div class="featured-ribbon">⭐ RECOMENDADO</div>
+                        <div class="plan-header">
+                            <span class="plan-badge badge-presencial">👑 Más Completo • Todo Incluido</span>
+                            <h3 class="plan-name">Plan Presencial</h3>
+                            <p class="plan-tagline">Atención presencial en oficina con revisión documental física cara a cara y acompañamiento total.</p>
+                            <div class="plan-price-box">
+                                <div class="price-val"><span class="price-currency">$</span>3,500 <span class="price-currency-code">MXN</span></div>
+                                <span class="price-type">Pago único • Asesoría integral completa</span>
+                            </div>
+                        </div>
+
+                        <div class="plan-body">
+                            <p class="plan-features-label">Todo lo del Plan Online, más:</p>
+                            <ul class="plan-features-list">
+                                <li class="feature-highlight">
+                                    <svg class="feature-icon icon-gold" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Sesión privada presencial en oficina</strong> con la asesora experta en pensiones Ley 73.</span>
+                                </li>
+                                <li class="feature-highlight">
+                                    <svg class="feature-icon icon-gold" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Revisión física y cotejo</strong> de constancias originales IMSS, AFORE y talones laborales.</span>
+                                </li>
+                                <li class="feature-highlight">
+                                    <svg class="feature-icon icon-gold" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Expediente físico impreso formal</strong> con proyecciones financieras y desglose de inversión.</span>
+                                </li>
+                                <li class="feature-highlight">
+                                    <svg class="feature-icon icon-gold" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Acompañamiento y preparación</strong> para trámites en subdelegación y ventanilla IMSS.</span>
+                                </li>
+                                <li>
+                                    <svg class="feature-icon" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Estrategia de recuperación</strong> de semanas no reconocidas o patrones anteriores.</span>
+                                </li>
+                                <li>
+                                    <svg class="feature-icon" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span><strong>Atención prioritaria VIP</strong> directa con la licenciada vía WhatsApp personal.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="plan-footer">
+                            <a href="https://wa.me/5212206494278?text=Hola%20Asesora,%20me%20interesa%20contratar%20el%20Plan%20Presencial%20($3,500%20MXN%20con%20todo%20incluido)%20para%20mi%20asesoría%20de%20Modalidad%2040." 
+                               class="btn-plan btn-plan-presencial" 
+                               data-cta-whatsapp="plan_presencial"
+                               target="_blank" 
+                               rel="noopener">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.073-2.127-.521-1.615-.67-2.66-2.307-2.74-2.414-.081-.108-.654-.87-.654-1.66 0-.79.413-1.179.56-1.341.147-.162.32-.203.427-.203.107 0 .214.002.307.007.1.005.234-.038.366.279.136.327.468 1.141.509 1.224.041.083.069.18.014.288-.055.109-.083.176-.164.272-.082.096-.172.215-.246.289-.082.082-.168.172-.072.337.096.165.426.703.914 1.137.629.56 1.16.733 1.325.815.165.083.275.124.316.193.041.069.041.405-.103.81z"/>
+                                </svg>
+                                <span>Contratar Plan Presencial ($3,500 MXN)</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Garantía y Confianza debajo de los planes -->
+                <div class="pricing-guarantee-box">
+                    <div class="guarantee-badge">🛡️ Garantía de Claridad y Apego a la Ley</div>
+                    <p class="guarantee-text">
+                        En <strong>Grupo Modalidad 40</strong> te asesoramos con fundamento en la Ley del Seguro Social de 1973. Diseñamos tu estrategia con números reales y auditables para que cada peso invertido maximice tu pensión mensual definitiva.
+                    </p>
                 </div>
             </div>
         </section>
@@ -702,8 +759,8 @@
                 <ul class="footer-links">
                     <li><a href="#inicio">Inicio</a></li>
                     <li><a href="#beneficios">Beneficios de Asesorarse</a></li>
-                    <li><a href="#simulador">Simulador de Pensión</a></li>
                     <li><a href="#testimonios">Casos de Éxito</a></li>
+                    <li><a href="#planes">Planes de Asesoría</a></li>
                     <li><a href="#faq">Preguntas Frecuentes</a></li>
                 </ul>
             </div>

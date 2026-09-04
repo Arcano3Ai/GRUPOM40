@@ -28,7 +28,6 @@ export class FrontendAgent extends BaseAgent {
       { id: 'hero-edad', name: 'Edad' },
       { id: 'hero-inicio', name: 'Año de Inicio Laboral' },
       { id: 'hero-telefono', name: 'Teléfono / WhatsApp' },
-      { id: 'hero-email', name: 'Correo Electrónico' },
       { id: 'btn-hero-submit', name: 'Botón de Envío' }
     ];
 
@@ -38,8 +37,23 @@ export class FrontendAgent extends BaseAgent {
       if (!exists) auditResults.passed = false;
     }
 
-    // 2. Verificar que NO haya formularios al fondo de la página
+    // 2. Verificar que el correo NO se pida en el formulario
+    const hasEmailField = html.includes('id="hero-email"');
+    auditResults.heroChecks.push({
+      check: 'Formulario sin campo de correo electrónico',
+      passed: !hasEmailField
+    });
+    if (hasEmailField) auditResults.passed = false;
+
+    // 3. Verificar que NO haya simulador ni modales estorbando
     const hasBottomModal = html.includes('modal-diagnostico-m40');
+    const hasSimulator = html.includes('id="simulador"');
+    auditResults.bottomChecks.push({
+      check: 'Simulador removido según requerimiento',
+      passed: !hasSimulator
+    });
+    if (hasSimulator) auditResults.passed = false;
+
     auditResults.bottomChecks.push({
       check: 'Sin formularios ni modales estorbando al fondo de la página',
       passed: !hasBottomModal

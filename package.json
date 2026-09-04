@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "node tests/form.test.js",
+    "test": "node --test tests/*.test.js",
     "swarm": "node swarm/index.js"
   }
 }
