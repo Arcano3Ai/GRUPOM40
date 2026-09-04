@@ -72,28 +72,23 @@ function buildWhatsAppUrl(params) {
         return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(params)}`;
     }
 
-    const { nombre, fechaNacimiento, edad, nss, descripcion } = params;
-    const fechaMX = formatDateToMX(fechaNacimiento);
-    const nssFmt = formatNSSDisplay(sanitizeNSS(nss));
+    const { nombre, edad, nss } = params;
+    const nssClean = sanitizeNSS(nss);
+    const nssDisplay = nssClean.length === 11 ? formatNSSDisplay(nssClean) : (nss && nss.trim() ? nss.trim() : 'No lo tengo a la mano');
 
     const lines = [
-        `👋 *Hola Asesora, solicito Diagnóstico para Modalidad 40 (Ley 73 IMSS)*`,
+        `👋 *Hola Asesora, solicito información sobre Modalidad 40:*`,
         ``,
-        `📋 *DATOS PARA MI ANÁLISIS DE PENSIÓN:*`,
-        `• *Nombre Completo:* ${nombre ? nombre.trim() : 'No especificado'}`,
-        `• *Fecha de Nacimiento:* ${fechaMX}`,
+        `• *Nombre:* ${nombre ? nombre.trim() : 'No especificado'}`,
         `• *Edad:* ${edad} años`,
-        `• *NSS (Número de Seguro Social):* ${nssFmt}`,
-        `• *Detalles de mi caso:* ${descripcion && descripcion.trim() ? descripcion.trim() : 'Deseo conocer mi proyección y estrategia para maximizar mi retiro.'}`,
-        ``,
-        `_Enviado desde el portal oficial grupomodalidad40.com.mx_`
+        `• *NSS:* ${nssDisplay}`
     ];
 
     return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 
 /* ==========================================================================
-   MODAL DE DIAGNÓSTICO INTERCEPTOR DE WHATSAPP
+   MODAL DE DIAGNÓSTICO INTERCEPTOR DE WHATSAPP (SENCILLO: NOMBRE, EDAD, NSS)
    ========================================================================== */
 function initWhatsAppLeadModal() {
     const modal = document.getElementById('modal-diagnostico-m40');
@@ -102,21 +97,14 @@ function initWhatsAppLeadModal() {
     if (!modal || !form) return;
 
     const nombreInput = document.getElementById('diag-nombre');
-    const fechaInput = document.getElementById('diag-fechaNacimiento');
     const edadInput = document.getElementById('diag-edad');
     const nssInput = document.getElementById('diag-nss');
-    const descInput = document.getElementById('diag-descripcion');
     const submitBtn = document.getElementById('btn-submit-whatsapp-modal');
 
     const errNombre = document.getElementById('err-diag-nombre');
-    const errFecha = document.getElementById('err-diag-fecha');
     const errEdad = document.getElementById('err-diag-edad');
-    const errNss = document.getElementById('err-diag-nss');
 
-    const openModal = (prefilledDescription = '') => {
-        if (prefilledDescription && descInput && !descInput.value) {
-            descInput.value = prefilledDescription;
-        }
+    const openModal = () => {
         modal.classList.add('is-active');
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
@@ -141,57 +129,39 @@ function initWhatsAppLeadModal() {
         if (e.key === 'Escape' && modal.classList.contains('is-active')) closeModal();
     });
 
-    // 1. Interceptar todos los enlaces y botones que llevan a WhatsApp
+    // Interceptar todos los enlaces y botones que llevan a WhatsApp
     const ctaTriggers = document.querySelectorAll('[data-cta-whatsapp], a[href*="wa.me"]');
     ctaTriggers.forEach((el) => {
         el.addEventListener('click', (e) => {
             e.preventDefault();
-            let contextDesc = '';
-
-            // Si es el botón del simulador, capturar el mensaje generado por el simulador
-            if (el.id === 'sim-whatsapp-cta' && el.href) {
-                try {
-                    const urlObj = new URL(el.href);
-                    contextDesc = urlObj.searchParams.get('text') || '';
-                } catch {}
-            }
-
-            openModal(contextDesc);
+            openModal();
         });
     });
 
-    // 2. Cálculo reactivo de edad al ingresar fecha de nacimiento
-    const onDateChange = () => {
-        if (!fechaInput.value) return;
-        const calculated = calculateAge(fechaInput.value);
-        if (calculated !== null) {
-            edadInput.value = calculated;
-            hideError(edadInput, errEdad);
-            hideError(fechaInput, errFecha);
-        }
-    };
-    fechaInput.addEventListener('input', onDateChange);
-    fechaInput.addEventListener('change', onDateChange);
-
-    // 3. Máscara de NSS en tiempo real
-    nssInput.addEventListener('input', (e) => {
-        const clean = sanitizeNSS(e.target.value);
-        e.target.value = formatNSSDisplay(clean);
-        if (clean.length === CONFIG.NSS_LENGTH) {
-            hideError(nssInput, errNss);
-        }
-    });
+    // Máscara de NSS en tiempo real si el usuario decide escribirlo
+    if (nssInput) {
+        nssInput.addEventListener('input', (e) => {
+            const clean = sanitizeNSS(e.target.value);
+            if (clean.length > 0) {
+                e.target.value = formatNSSDisplay(clean);
+            }
+        });
+    }
 
     // Limpieza de errores en input
-    nombreInput.addEventListener('input', () => {
-        if (nombreInput.value.trim().length >= 3) hideError(nombreInput, errNombre);
-    });
-    edadInput.addEventListener('input', () => {
-        const val = parseInt(edadInput.value, 10);
-        if (!isNaN(val) && val >= CONFIG.MIN_AGE && val <= CONFIG.MAX_AGE) {
-            hideError(edadInput, errEdad);
-        }
-    });
+    if (nombreInput) {
+        nombreInput.addEventListener('input', () => {
+            if (nombreInput.value.trim().length >= 2) hideError(nombreInput, errNombre);
+        });
+    }
+    if (edadInput) {
+        edadInput.addEventListener('input', () => {
+            const val = parseInt(edadInput.value, 10);
+            if (!isNaN(val) && val >= 25 && val <= 100) {
+                hideError(edadInput, errEdad);
+            }
+        });
+    }
 
     function showError(input, errEl, msg) {
         if (input) input.classList.add('is-invalid');
@@ -206,50 +176,30 @@ function initWhatsAppLeadModal() {
         if (errEl) errEl.classList.remove('is-visible');
     }
 
-    // 4. Envío del Formulario
+    // Envío del Formulario
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let isValid = true;
         let firstInvalid = null;
 
         // Validar Nombre
-        const nombreVal = nombreInput.value.trim();
-        if (nombreVal.length < 3) {
-            showError(nombreInput, errNombre, 'Por favor ingresa tu nombre completo (mínimo 3 letras).');
+        const nombreVal = nombreInput ? nombreInput.value.trim() : '';
+        if (nombreVal.length < 2) {
+            showError(nombreInput, errNombre, 'Por favor ingresa tu nombre.');
             isValid = false;
             if (!firstInvalid) firstInvalid = nombreInput;
         } else {
             hideError(nombreInput, errNombre);
         }
 
-        // Validar Fecha
-        const fechaVal = fechaInput.value;
-        if (!fechaVal) {
-            showError(fechaInput, errFecha, 'Selecciona tu fecha de nacimiento.');
-            isValid = false;
-            if (!firstInvalid) firstInvalid = fechaInput;
-        } else {
-            hideError(fechaInput, errFecha);
-        }
-
         // Validar Edad
-        const edadVal = parseInt(edadInput.value, 10);
-        if (isNaN(edadVal) || edadVal < CONFIG.MIN_AGE || edadVal > CONFIG.MAX_AGE) {
-            showError(edadInput, errEdad, `Ingresa una edad válida (entre ${CONFIG.MIN_AGE} y ${CONFIG.MAX_AGE} años).`);
+        const edadVal = edadInput ? parseInt(edadInput.value, 10) : NaN;
+        if (isNaN(edadVal) || edadVal < 25 || edadVal > 100) {
+            showError(edadInput, errEdad, 'Por favor ingresa tu edad.');
             isValid = false;
             if (!firstInvalid) firstInvalid = edadInput;
         } else {
             hideError(edadInput, errEdad);
-        }
-
-        // Validar NSS
-        const nssClean = sanitizeNSS(nssInput.value);
-        if (nssClean.length !== CONFIG.NSS_LENGTH) {
-            showError(nssInput, errNss, `El NSS debe tener exactamente 11 dígitos numéricos (tienes ${nssClean.length}).`);
-            isValid = false;
-            if (!firstInvalid) firstInvalid = nssInput;
-        } else {
-            hideError(nssInput, errNss);
         }
 
         if (!isValid) {
@@ -260,10 +210,8 @@ function initWhatsAppLeadModal() {
         // Generar enlace y abrir WhatsApp
         const waUrl = buildWhatsAppUrl({
             nombre: nombreVal,
-            fechaNacimiento: fechaVal,
             edad: edadVal,
-            nss: nssClean,
-            descripcion: descInput ? descInput.value : ''
+            nss: nssInput ? nssInput.value : ''
         });
 
         const origHtml = submitBtn.innerHTML;

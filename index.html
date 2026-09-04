@@ -760,45 +760,31 @@
             <form id="form-pre-whatsapp" class="m40-form" novalidate>
                 <div class="m40-form-group">
                     <label for="diag-nombre">Nombre Completo <span class="req">*</span></label>
-                    <input type="text" id="diag-nombre" name="nombre" class="m40-input" placeholder="Ej. Juan Pérez Garza" required autocomplete="name">
-                    <span class="m40-field-error" id="err-diag-nombre">Por favor ingresa tu nombre completo (mínimo 3 letras).</span>
-                </div>
-
-                <div class="m40-form-row">
-                    <div class="m40-form-group">
-                        <label for="diag-fechaNacimiento">Fecha de Nacimiento <span class="req">*</span></label>
-                        <input type="date" id="diag-fechaNacimiento" name="fechaNacimiento" class="m40-input" required min="1930-01-01" max="2015-12-31">
-                        <span class="m40-field-error" id="err-diag-fecha">Selecciona tu fecha de nacimiento.</span>
-                    </div>
-
-                    <div class="m40-form-group">
-                        <label for="diag-edad">Edad (Años) <span class="req">*</span></label>
-                        <input type="number" id="diag-edad" name="edad" class="m40-input" placeholder="Ej. 58" min="25" max="105" required>
-                        <span class="m40-field-error" id="err-diag-edad">Ingresa una edad válida (25 - 105).</span>
-                    </div>
+                    <input type="text" id="diag-nombre" name="nombre" class="m40-input" placeholder="Tu nombre completo" required autocomplete="name">
+                    <span class="m40-field-error" id="err-diag-nombre">Por favor ingresa tu nombre.</span>
                 </div>
 
                 <div class="m40-form-group">
-                    <label for="diag-nss">Número de Seguro Social (NSS) <span class="req">*</span></label>
-                    <input type="text" id="diag-nss" name="nss" class="m40-input" placeholder="11 dígitos (Ej. 12-34-56-7890-1)" maxlength="14" inputmode="numeric" required>
-                    <span class="m40-input-hint">💡 Indispensable para verificar tu régimen de Ley 73 (exactamente 11 dígitos).</span>
-                    <span class="m40-field-error" id="err-diag-nss">El NSS debe tener exactamente 11 dígitos numéricos.</span>
+                    <label for="diag-edad">Edad (Años) <span class="req">*</span></label>
+                    <input type="number" id="diag-edad" name="edad" class="m40-input" placeholder="Ej. 58" min="30" max="100" required>
+                    <span class="m40-field-error" id="err-diag-edad">Ingresa tu edad.</span>
                 </div>
 
                 <div class="m40-form-group">
-                    <label for="diag-descripcion">Breve descripción de tu caso</label>
-                    <textarea id="diag-descripcion" name="descripcion" class="m40-input m40-textarea" rows="3" placeholder="Ej. Cuento con aprox. 950 semanas cotizadas, dejé de trabajar hace un año y busco cotizar al tope de 25 UMAs..."></textarea>
+                    <label for="diag-nss">¿Sabes tu Número de Seguro Social (NSS)?</label>
+                    <input type="text" id="diag-nss" name="nss" class="m40-input" placeholder="11 dígitos (opcional si no lo tienes a la mano)" maxlength="14" inputmode="numeric">
+                    <span class="m40-input-hint">Si no te lo sabes, déjalo en blanco y tu asesora te ayudará a buscarlo.</span>
                 </div>
 
                 <button type="submit" class="m40-submit-btn" id="btn-submit-whatsapp-modal">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.073-2.127-.521-1.615-.67-2.66-2.307-2.74-2.414-.081-.108-.654-.87-.654-1.66 0-.79.413-1.179.56-1.341.147-.162.32-.203.427-.203.107 0 .214.002.307.007.1.005.234-.038.366.279.136.327.468 1.141.509 1.224.041.083.069.18.014.288-.055.109-.083.176-.164.272-.082.096-.172.215-.246.289-.082.082-.168.172-.072.337.096.165.426.703.914 1.137.629.56 1.16.733 1.325.815.165.083.262.069.359-.042.097-.111.413-.48.523-.644.11-.165.22-.138.371-.083.151.055.955.45 1.12.533.165.083.275.124.316.193.041.069.041.405-.103.81z"/>
                     </svg>
-                    <span>Enviar y Continuar a WhatsApp</span>
+                    <span>Enviar a WhatsApp</span>
                 </button>
 
                 <p class="m40-privacy-disclaimer">
-                    🔒 Tus datos están protegidos y se procesan exclusivamente para tu diagnóstico de pensión.
+                    🔒 Tus datos están protegidos y se envían de forma directa a la asesora.
                 </p>
             </form>
         </div>
