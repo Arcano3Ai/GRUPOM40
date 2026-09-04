@@ -8,7 +8,7 @@
 
     // Parámetros y Constantes Oficiales México 2026
     const CONFIG = {
-        PHONE: '528120388113', // Teléfono Asesoría Oficial
+        PHONE: '5212206494278', // Teléfono Asesoría Oficial +52 1 220 649 4278
         UMA_DIARIA_2026: 117.31,
         DIAS_MES_PROMEDIO: 30.4,
         FACTOR_COSTO_M40_2026: 0.14438, // 14.438% para 2026
