@@ -40,6 +40,12 @@ export class QAAgent extends BaseAgent {
       if (!decoded.includes('SITUACIÓN DEL CLIENTE')) throw new Error('Falta situación del cliente');
     });
 
+    runTest('buildWhatsAppUrl tolera campos vacíos sin romper el envío', () => {
+      const url = buildWhatsAppUrl({});
+      const decoded = decodeURIComponent(url);
+      if (!decoded.includes('Por especificar')) throw new Error('No manejó campos vacíos');
+    });
+
     runTest('formatCurrency formatea montos en moneda mexicana correctamente', () => {
       const formatted = formatCurrency(50000);
       if (!formatted.includes('50,000')) throw new Error(`Formato incorrecto: ${formatted}`);
