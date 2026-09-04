@@ -26,19 +26,19 @@ export function buildWhatsAppUrl(params) {
     const { nombre, edad, inicioLaboral } = params || {};
     const year = parseInt(inicioLaboral, 10);
     const ley73Status = (!isNaN(year) && year < 1997)
-        ? '✅ Candidato a Régimen Ley 73 (Inició antes del 1 de julio de 1997)'
-        : '⚠️ Inició cotizaciones en o después de 1997 (Requiere revisión de régimen)';
+        ? 'Candidato a Ley 73 (Inició antes del 1 de julio de 1997)'
+        : (inicioLaboral ? 'Inició en o después de 1997 (Requiere revisión de régimen)' : 'Por definir');
 
     const lines = [
-        `👋 *Hola Asesora, solicito asesoría sobre Modalidad 40:*`,
-        ``,
-        `📋 *SITUACIÓN DEL CLIENTE:*`,
-        `• *Nombre:* ${nombre ? nombre.trim() : 'No especificado'}`,
-        `• *Edad:* ${edad ? edad : 'No especificada'} años`,
-        `• *Año en que empezó a cotizar/trabajar:* ${inicioLaboral ? inicioLaboral : 'No especificado'}`,
-        `• *Diagnóstico preliminar:* ${ley73Status}`,
-        ``,
-        `¿Me apoya revisando si soy candidato para pensión con la Ley 73 del IMSS?`
+        'Hola Asesora, solicito asesoría sobre Modalidad 40:',
+        '',
+        'SITUACIÓN DEL CLIENTE:',
+        '• Nombre: ' + (nombre && nombre.trim() ? nombre.trim() : 'Por especificar'),
+        '• Edad: ' + (edad ? edad + ' años' : 'Por especificar'),
+        '• Año en que empezó a cotizar/trabajar: ' + (inicioLaboral ? inicioLaboral : 'Por especificar'),
+        '• Diagnóstico preliminar: ' + ley73Status,
+        '',
+        '¿Me apoya revisando si soy candidato para pensión con la Ley 73 del IMSS?'
     ];
 
     return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(lines.join('\n'))}`;
