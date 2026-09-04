@@ -1,6 +1,6 @@
 /**
  * GRUPO MODALIDAD 40 - LÓGICA DE ALTA CONVERSIÓN & PRE-CONSULTA WHATSAPP
- * Control del Simulador Ley 73, Formulario Interceptor de WhatsApp, a11y y FAQs
+ * Formulario Directo en Hero, Modal Reutilizable, Sincronización de Datos y CTAs
  */
 
 // Constantes Oficiales México 2026
@@ -8,9 +8,7 @@ const CONFIG = {
     PHONE: '5212206494278', // Teléfono Asesoría Oficial +52 1 220 649 4278
     UMA_DIARIA_2026: 117.31,
     DIAS_MES_PROMEDIO: 30.4,
-    FACTOR_COSTO_M40_2026: 0.14438, // 14.438% para 2026
-    MIN_AGE: 25,
-    MAX_AGE: 105,
+    FACTOR_COSTO_M40_2026: 0.14438,
     NSS_LENGTH: 11
 };
 
@@ -21,33 +19,6 @@ function formatCurrency(val) {
         currency: 'MXN',
         maximumFractionDigits: 0
     }).format(val);
-}
-
-// Helper para calcular edad exacta a partir de fecha YYYY-MM-DD
-function calculateAge(birthDateString) {
-    if (!birthDateString) return null;
-    const birthDate = new Date(birthDateString + 'T00:00:00');
-    if (isNaN(birthDate.getTime())) return null;
-
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-
-    return (age >= 0 && age <= 120) ? age : null;
-}
-
-// Helper para formatear fecha a DD/MM/AAAA
-function formatDateToMX(dateString) {
-    if (!dateString) return '';
-    const parts = dateString.split('-');
-    if (parts.length === 3) {
-        return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    }
-    return dateString;
 }
 
 // Helper para sanitizar NSS a solo dígitos (máx 11)
@@ -88,143 +59,197 @@ function buildWhatsAppUrl(params) {
 }
 
 /* ==========================================================================
-   MODAL DE DIAGNÓSTICO INTERCEPTOR DE WHATSAPP (SENCILLO: NOMBRE, EDAD, NSS)
+   SISTEMA INTEGRADO DE FORMULARIOS Y CTAs DE WHATSAPP
    ========================================================================== */
-function initWhatsAppLeadModal() {
+function initLeadFormsAndCTAs() {
+    // 1. Elementos del Hero Form
+    const heroForm = document.getElementById('hero-lead-form');
+    const heroNombre = document.getElementById('hero-nombre');
+    const heroEdad = document.getElementById('hero-edad');
+    const heroNss = document.getElementById('hero-nss');
+    const heroSubmitBtn = document.getElementById('btn-hero-submit');
+    const errHeroNombre = document.getElementById('err-hero-nombre');
+    const errHeroEdad = document.getElementById('err-hero-edad');
+
+    // 2. Elementos del Modal Form
     const modal = document.getElementById('modal-diagnostico-m40');
-    const closeBtn = document.getElementById('m40-modal-close');
-    const form = document.getElementById('form-pre-whatsapp');
-    if (!modal || !form) return;
+    const modalClose = document.getElementById('m40-modal-close');
+    const modalForm = document.getElementById('form-pre-whatsapp');
+    const modalNombre = document.getElementById('diag-nombre');
+    const modalEdad = document.getElementById('diag-edad');
+    const modalNss = document.getElementById('diag-nss');
+    const modalSubmitBtn = document.getElementById('btn-submit-whatsapp-modal');
+    const errModalNombre = document.getElementById('err-diag-nombre');
+    const errModalEdad = document.getElementById('err-diag-edad');
 
-    const nombreInput = document.getElementById('diag-nombre');
-    const edadInput = document.getElementById('diag-edad');
-    const nssInput = document.getElementById('diag-nss');
-    const submitBtn = document.getElementById('btn-submit-whatsapp-modal');
+    // Estado compartido en memoria
+    const state = {
+        nombre: '',
+        edad: '',
+        nss: ''
+    };
 
-    const errNombre = document.getElementById('err-diag-nombre');
-    const errEdad = document.getElementById('err-diag-edad');
+    // Sincronización bidireccional entre inputs
+    const syncInputs = (field, value) => {
+        state[field] = value;
+        if (field === 'nombre') {
+            if (heroNombre && heroNombre.value !== value) heroNombre.value = value;
+            if (modalNombre && modalNombre.value !== value) modalNombre.value = value;
+        } else if (field === 'edad') {
+            if (heroEdad && heroEdad.value !== value) heroEdad.value = value;
+            if (modalEdad && modalEdad.value !== value) modalEdad.value = value;
+        } else if (field === 'nss') {
+            const formatted = value.length > 0 ? formatNSSDisplay(value) : '';
+            if (heroNss && heroNss.value !== formatted) heroNss.value = formatted;
+            if (modalNss && modalNss.value !== formatted) modalNss.value = formatted;
+        }
+    };
 
+    // Listeners para Hero
+    if (heroNombre) heroNombre.addEventListener('input', (e) => syncInputs('nombre', e.target.value));
+    if (heroEdad) heroEdad.addEventListener('input', (e) => syncInputs('edad', e.target.value));
+    if (heroNss) heroNss.addEventListener('input', (e) => syncInputs('nss', sanitizeNSS(e.target.value)));
+
+    // Listeners para Modal
+    if (modalNombre) modalNombre.addEventListener('input', (e) => syncInputs('nombre', e.target.value));
+    if (modalEdad) modalEdad.addEventListener('input', (e) => syncInputs('edad', e.target.value));
+    if (modalNss) modalNss.addEventListener('input', (e) => syncInputs('nss', sanitizeNSS(e.target.value)));
+
+    // Helpers para modal
     const openModal = () => {
+        if (!modal) return;
         modal.classList.add('is-active');
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
         setTimeout(() => {
-            if (nombreInput) nombreInput.focus();
+            if (modalNombre) modalNombre.focus();
         }, 150);
     };
 
     const closeModal = () => {
+        if (!modal) return;
         modal.classList.remove('is-active');
         modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
     };
 
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('is-active')) closeModal();
+        if (e.key === 'Escape' && modal && modal.classList.contains('is-active')) closeModal();
     });
 
-    // Interceptar todos los enlaces y botones que llevan a WhatsApp
-    const ctaTriggers = document.querySelectorAll('[data-cta-whatsapp], a[href*="wa.me"]');
-    ctaTriggers.forEach((el) => {
-        el.addEventListener('click', (e) => {
-            e.preventDefault();
-            openModal();
-        });
-    });
-
-    // Máscara de NSS en tiempo real si el usuario decide escribirlo
-    if (nssInput) {
-        nssInput.addEventListener('input', (e) => {
-            const clean = sanitizeNSS(e.target.value);
-            if (clean.length > 0) {
-                e.target.value = formatNSSDisplay(clean);
-            }
-        });
-    }
-
-    // Limpieza de errores en input
-    if (nombreInput) {
-        nombreInput.addEventListener('input', () => {
-            if (nombreInput.value.trim().length >= 2) hideError(nombreInput, errNombre);
-        });
-    }
-    if (edadInput) {
-        edadInput.addEventListener('input', () => {
-            const val = parseInt(edadInput.value, 10);
-            if (!isNaN(val) && val >= 25 && val <= 100) {
-                hideError(edadInput, errEdad);
-            }
-        });
-    }
-
-    function showError(input, errEl, msg) {
-        if (input) input.classList.add('is-invalid');
-        if (errEl) {
-            if (msg) errEl.textContent = msg;
-            errEl.classList.add('is-visible');
-        }
-    }
-
-    function hideError(input, errEl) {
-        if (input) input.classList.remove('is-invalid');
-        if (errEl) errEl.classList.remove('is-visible');
-    }
-
-    // Envío del Formulario
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        let isValid = true;
-        let firstInvalid = null;
+    // Validar y enviar WhatsApp
+    const handleFormSubmit = (btn, isModal = false) => {
+        let valid = true;
+        const nombreVal = state.nombre.trim();
+        const edadVal = parseInt(state.edad, 10);
 
         // Validar Nombre
-        const nombreVal = nombreInput ? nombreInput.value.trim() : '';
         if (nombreVal.length < 2) {
-            showError(nombreInput, errNombre, 'Por favor ingresa tu nombre.');
-            isValid = false;
-            if (!firstInvalid) firstInvalid = nombreInput;
+            valid = false;
+            if (isModal) {
+                if (modalNombre) modalNombre.classList.add('is-invalid');
+                if (errModalNombre) errModalNombre.classList.add('is-visible');
+            } else {
+                if (heroNombre) heroNombre.classList.add('is-invalid');
+                if (errHeroNombre) errHeroNombre.classList.add('is-visible');
+            }
         } else {
-            hideError(nombreInput, errNombre);
+            if (heroNombre) heroNombre.classList.remove('is-invalid');
+            if (modalNombre) modalNombre.classList.remove('is-invalid');
+            if (errHeroNombre) errHeroNombre.classList.remove('is-visible');
+            if (errModalNombre) errModalNombre.classList.remove('is-visible');
         }
 
         // Validar Edad
-        const edadVal = edadInput ? parseInt(edadInput.value, 10) : NaN;
         if (isNaN(edadVal) || edadVal < 25 || edadVal > 100) {
-            showError(edadInput, errEdad, 'Por favor ingresa tu edad.');
-            isValid = false;
-            if (!firstInvalid) firstInvalid = edadInput;
+            valid = false;
+            if (isModal) {
+                if (modalEdad) modalEdad.classList.add('is-invalid');
+                if (errModalEdad) errModalEdad.classList.add('is-visible');
+            } else {
+                if (heroEdad) heroEdad.classList.add('is-invalid');
+                if (errHeroEdad) errHeroEdad.classList.add('is-visible');
+            }
         } else {
-            hideError(edadInput, errEdad);
+            if (heroEdad) heroEdad.classList.remove('is-invalid');
+            if (modalEdad) modalEdad.classList.remove('is-invalid');
+            if (errHeroEdad) errHeroEdad.classList.remove('is-visible');
+            if (errModalEdad) errModalEdad.classList.remove('is-visible');
         }
 
-        if (!isValid) {
-            if (firstInvalid) firstInvalid.focus();
-            return;
-        }
+        if (!valid) return false;
 
-        // Generar enlace y abrir WhatsApp
+        // Construir URL de WhatsApp
         const waUrl = buildWhatsAppUrl({
             nombre: nombreVal,
             edad: edadVal,
-            nss: nssInput ? nssInput.value : ''
+            nss: state.nss
         });
 
-        const origHtml = submitBtn.innerHTML;
-        submitBtn.innerHTML = `<span>✓ Abriendo WhatsApp...</span>`;
-        submitBtn.disabled = true;
+        // Feedback en botón
+        if (btn) {
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span>✓ Abriendo WhatsApp...</span>`;
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                if (isModal) closeModal();
+            }, 1200);
+        }
 
+        // Abrir WhatsApp en nueva pestaña
         window.open(waUrl, '_blank', 'noopener,noreferrer');
+        return true;
+    };
 
-        setTimeout(() => {
-            submitBtn.innerHTML = origHtml;
-            submitBtn.disabled = false;
-            closeModal();
-        }, 1200);
+    // 3. Listener en Submit del Hero
+    if (heroForm) {
+        heroForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleFormSubmit(heroSubmitBtn, false);
+        });
+    }
+
+    // 4. Listener en Submit del Modal
+    if (modalForm) {
+        modalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleFormSubmit(modalSubmitBtn, true);
+        });
+    }
+
+    // 5. Vincular todos los CTAs de WhatsApp en cualquier lugar de la página
+    const allWhatsAppCTAs = document.querySelectorAll('[data-cta-whatsapp], a[href*="wa.me"]');
+    allWhatsAppCTAs.forEach((cta) => {
+        cta.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // Si los datos ya están completos, enviar directo
+            if (state.nombre.trim().length >= 2 && !isNaN(parseInt(state.edad, 10))) {
+                handleFormSubmit(cta, false);
+                return;
+            }
+
+            // Si el usuario está cerca del Hero, enfocar el Hero form
+            const heroSection = document.getElementById('inicio');
+            const heroRect = heroSection ? heroSection.getBoundingClientRect() : null;
+            const isHeroVisible = heroRect && heroRect.top >= -200 && heroRect.bottom >= 300;
+
+            if (isHeroVisible && heroNombre) {
+                heroNombre.focus();
+                heroNombre.classList.add('is-invalid');
+                setTimeout(() => heroNombre.classList.remove('is-invalid'), 1200);
+            } else {
+                openModal();
+            }
+        });
     });
 }
 
@@ -241,7 +266,6 @@ function initSimulator() {
     const pensionResultDisplay = document.getElementById('sim-pension-result');
     const costResultDisplay = document.getElementById('sim-cost-result');
     const totalWeeksDisplay = document.getElementById('sim-total-weeks');
-    const simCtaBtn = document.getElementById('sim-whatsapp-cta');
 
     if (!weeksSlider || !yearsSlider || !salarySelect || !pensionResultDisplay) {
         return;
@@ -288,16 +312,6 @@ function initSimulator() {
 
         pensionResultDisplay.textContent = formatCurrency(pensionEstimada);
         if (costResultDisplay) costResultDisplay.textContent = formatCurrency(costoMensual);
-
-        const waMessage = `Hola Asesora, realicé mi cálculo en el simulador de Grupo Modalidad 40:
-- Semanas actuales: ${currentWeeks}
-- Años a invertir en M40: ${yearsInM40} años (${targetUmas} UMAs)
-- Pensión estimada: ${formatCurrency(pensionEstimada)} / mes.
-Deseo conocer mi viabilidad y estrategia formal.`;
-
-        if (simCtaBtn) {
-            simCtaBtn.href = buildWhatsAppUrl(waMessage);
-        }
     };
 
     weeksSlider.addEventListener('input', calculate);
@@ -353,15 +367,13 @@ if (typeof document !== 'undefined') {
         initSimulator();
         initFaqAccordion();
         initNavbarScroll();
-        initWhatsAppLeadModal();
+        initLeadFormsAndCTAs();
     });
 }
 
-// Exportar para tests y swarm (ESM / CommonJS dual-friendly)
+// Exportar para tests y swarm
 export {
     CONFIG,
-    calculateAge,
-    formatDateToMX,
     sanitizeNSS,
     formatNSSDisplay,
     buildWhatsAppUrl,

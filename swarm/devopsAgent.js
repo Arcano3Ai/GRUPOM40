@@ -20,7 +20,7 @@ export class DevOpsAgent extends BaseAgent {
     this.log('Añadiendo cambios al staging de Git...');
     await execAsync('git add -A');
 
-    const commitMsg = 'feat(lead-capture): simplificar formulario a nombre, edad y NSS para envio a WhatsApp';
+    const commitMsg = 'feat(lead-form): agregar formulario directo en hero al principio y vincular todos los CTAs de WhatsApp';
     try {
       const { stdout: commitOut } = await execAsync(`git commit -m "${commitMsg}"`);
       this.log(`Commit creado: ${commitOut.trim().split('\n')[0]}`);
@@ -40,7 +40,7 @@ export class DevOpsAgent extends BaseAgent {
       this.log(`Push completado: ${pushOut || pushErr}`);
       results.pushed = true;
     } catch (err) {
-      this.log(`Reintentando push con seguimiento...`, 'WARN');
+      this.log(`Reintentando push con upstream...`, 'WARN');
       const { stdout: pushTrack, stderr: pushTrackErr } = await execAsync('git push -u origin main');
       this.log(`Push completado: ${pushTrack || pushTrackErr}`);
       results.pushed = true;
