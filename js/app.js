@@ -365,21 +365,10 @@ function initCheckoutModal() {
         });
     });
 
-    // Botón de Mercado Pago → abre el link oficial de Mercado Pago
+    // Botón de Mercado Pago → ejecuta Checkout Pro (con fallback automático)
     const mpBtn = document.getElementById('checkout-mp-button');
     if (mpBtn) {
         mpBtn.addEventListener('click', (e) => {
-            const key = (currentCheckoutPlan || 'ONLINE').toUpperCase();
-            const directUrl = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO[key]);
-            if (directUrl) {
-                if (mpBtn.tagName === 'A') {
-                    // Si es enlace <a>, el navegador abre mpBtn.href naturalmente con target="_blank"
-                    return;
-                }
-                e.preventDefault();
-                window.open(directUrl, '_blank', 'noopener,noreferrer');
-                return;
-            }
             e.preventDefault();
             fetchMercadoPagoCheckout(currentCheckoutPlan);
         });
@@ -452,11 +441,14 @@ async function fetchMercadoPagoCheckout(planKey) {
     const btn = document.getElementById('checkout-mp-button');
     setMpButtonLoading(btn);
 
+    const key = (planKey || 'ONLINE').toUpperCase();
+    const fallbackDirectUrl = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO[key]);
+
     try {
         const response = await fetch('/api/create-preference', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plan: planKey }),
+            body: JSON.stringify({ plan: key }),
         });
 
         const data = await response.json();
@@ -465,17 +457,18 @@ async function fetchMercadoPagoCheckout(planKey) {
             throw new Error(data.error || `HTTP ${response.status}`);
         }
 
-        // En sandbox usamos sandbox_init_point; en producción, init_point
-        const isSandbox = data.sandbox_init_point && !data.init_point?.includes('www.mercadopago');
         const url = data.init_point || data.sandbox_init_point;
-
         if (!url) throw new Error('No se recibió URL de pago de Mercado Pago.');
 
-        // Abrir en la misma ventana (flujo estándar de Checkout Pro)
+        // Redirección oficial al checkout de Mercado Pago
         window.location.href = url;
 
     } catch (err) {
-        console.error('[MP Checkout Pro] Error:', err.message);
+        console.warn('[MP Checkout Pro] Redirigiendo a enlace directo oficial:', err.message);
+        if (fallbackDirectUrl) {
+            window.location.href = fallbackDirectUrl;
+            return;
+        }
         resetMpButton();
         showMpError(err.message);
     }

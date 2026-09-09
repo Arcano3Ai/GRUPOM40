@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/pago-exitoso", "destination": "/pago-exitoso.html" },
+    { "source": "/pago-pendiente", "destination": "/pago-pendiente.html" },
+    { "source": "/pago-fallido", "destination": "/pago-fallido.html" }
+  ]
+}
