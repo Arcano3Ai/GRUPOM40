@@ -7,7 +7,19 @@ export const CONFIG = {
     PHONE: '5212206494278', // Teléfono Asesoría Oficial +52 1 220 649 4278
     UMA_DIARIA_2026: 117.31,
     DIAS_MES_PROMEDIO: 30.4,
-    FACTOR_COSTO_M40_2026: 0.14438
+    FACTOR_COSTO_M40_2026: 0.14438,
+    PAYMENT_CONFIG: {
+        SPEI: {
+            banco: 'BBVA México',
+            beneficiario: 'Asesoría Especializada Modalidad 40',
+            clabe: '012180001234567890', // 18 dígitos oficiales
+            concepto: 'Asesoria M40'
+        },
+        MERCADO_PAGO: {
+            ONLINE: 'https://mpago.la/online-m40',
+            PRESENCIAL: 'https://mpago.la/presencial-m40'
+        }
+    }
 };
 
 export function formatCurrency(val) {
@@ -69,10 +81,10 @@ export const PRICING_PLANS = {
         price: 3500,
         priceFormatted: '$3,500 MXN',
         badge: 'Recomendado • Todo Incluido',
-        subtitle: 'Atención personalizada en oficina física con revisión documental cara a cara y acompañamiento total.',
+        subtitle: 'Atención personalizada en la casa del cliente o en un lugar comercial (como un café), con revisión documental cara a cara y acompañamiento total.',
         features: [
             'Todo lo incluido en el Plan Online',
-            'Sesión privada presencial cara a cara con la asesora especialista en pensiones',
+            'Sesión privada presencial en casa del cliente (o en un lugar comercial como un café) con la asesora experta en pensiones',
             'Revisión física y cotejo minucioso de documentos originales (historial, constancias, AFORE)',
             'Expediente físico impreso formal con proyecciones financieras y análisis de rentabilidad',
             'Acompañamiento y preparación para trámites en subdelegación y ventanilla del IMSS',
@@ -89,5 +101,13 @@ export function buildPlanWhatsAppUrl(planKey) {
         return `https://wa.me/${CONFIG.PHONE}`;
     }
     return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(plan.whatsappMessage)}`;
+}
+
+export function buildPaymentWhatsAppConfirmationUrl(planKey, method = 'SPEI') {
+    const key = (planKey || '').toUpperCase();
+    const plan = PRICING_PLANS[key] || PRICING_PLANS.ONLINE;
+    const methodName = method.toUpperCase() === 'MERCADO_PAGO' ? 'Mercado Pago' : 'SPEI / Transferencia Bancaria';
+    const msg = `Hola Asesora, acabo de realizar el pago de mi ${plan.name} (${plan.priceFormatted}) vía ${methodName}. Adjunto mi comprobante para iniciar mi expediente y agendar mi asesoría.`;
+    return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(msg)}`;
 }
 

@@ -8,7 +8,19 @@ const CONFIG = {
     PHONE: '5212206494278', // Teléfono Asesoría Oficial +52 1 220 649 4278
     UMA_DIARIA_2026: 117.31,
     DIAS_MES_PROMEDIO: 30.4,
-    FACTOR_COSTO_M40_2026: 0.14438
+    FACTOR_COSTO_M40_2026: 0.14438,
+    PAYMENT_CONFIG: {
+        SPEI: {
+            banco: 'BBVA México',
+            beneficiario: 'Asesoría Especializada Modalidad 40',
+            clabe: '012180001234567890',
+            concepto: 'Asesoria M40'
+        },
+        MERCADO_PAGO: {
+            ONLINE: 'https://mpago.la/online-m40',
+            PRESENCIAL: 'https://mpago.la/presencial-m40'
+        }
+    }
 };
 
 // Helper para formatear moneda en Pesos Mexicanos (MXN)
@@ -73,10 +85,10 @@ const PRICING_PLANS = {
         price: 3500,
         priceFormatted: '$3,500 MXN',
         badge: 'Recomendado • Todo Incluido',
-        subtitle: 'Atención personalizada en oficina física con revisión documental cara a cara y acompañamiento total.',
+        subtitle: 'Atención personalizada en la casa del cliente o en un lugar comercial (como un café), con revisión documental cara a cara y acompañamiento total.',
         features: [
             'Todo lo incluido en el Plan Online',
-            'Sesión privada presencial cara a cara con la asesora especialista en pensiones',
+            'Sesión privada presencial en casa del cliente (o en un lugar comercial como un café) con la asesora experta en pensiones',
             'Revisión física y cotejo minucioso de documentos originales (historial, constancias, AFORE)',
             'Expediente físico impreso formal con proyecciones financieras y análisis de rentabilidad',
             'Acompañamiento y preparación para trámites en subdelegación y ventanilla del IMSS',
@@ -93,6 +105,14 @@ function buildPlanWhatsAppUrl(planKey) {
         return `https://wa.me/${CONFIG.PHONE}`;
     }
     return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(plan.whatsappMessage)}`;
+}
+
+function buildEmailConfirmUrl(planKey) {
+    const key = (planKey || '').toUpperCase();
+    const plan = PRICING_PLANS[key] || PRICING_PLANS.ONLINE;
+    const subject = encodeURIComponent(`Comprobante de Pago SPEI - ${plan.name} (${plan.priceFormatted})`);
+    const body = encodeURIComponent(`Hola, acabo de realizar el pago de ${plan.name} (${plan.priceFormatted}) vía SPEI. Adjunto mi comprobante para iniciar mi expediente y agendar mi asesoría.`);
+    return `mailto:contacto@grupomodalidad40.com.mx?subject=${subject}&body=${body}`;
 }
 
 // Función global directa para enviar el reporte de WhatsApp desde el botón del formulario
@@ -258,12 +278,132 @@ function initNavbarScroll() {
     }, { passive: true });
 }
 
+/* ==========================================================================
+   PASARELA DE PAGOS Y CHECKOUT (MERCADO PAGO, SPEI Y CLABE)
+   ========================================================================== */
+let currentCheckoutPlan = 'ONLINE';
+
+function openCheckoutModal(planKey = 'ONLINE') {
+    const key = (planKey || 'ONLINE').toUpperCase();
+    currentCheckoutPlan = key;
+    const plan = PRICING_PLANS[key] || PRICING_PLANS.ONLINE;
+    const modal = document.getElementById('checkout-modal');
+    if (!modal) return;
+
+    // Actualizar datos del plan en el modal
+    const planNameEl = document.getElementById('checkout-plan-name');
+    const planPriceEl = document.getElementById('checkout-plan-price');
+    const mpLinkEl = document.getElementById('checkout-mp-button');
+    const speiAmountEl = document.getElementById('checkout-spei-amount');
+
+    if (planNameEl) planNameEl.textContent = plan.name;
+    if (planPriceEl) planPriceEl.textContent = plan.priceFormatted;
+    if (speiAmountEl) speiAmountEl.textContent = plan.priceFormatted;
+
+    const mpUrl = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO[key])
+        || 'https://www.mercadopago.com.mx';
+    if (mpLinkEl) mpLinkEl.href = mpUrl;
+
+    // Actualizar el enlace de confirmación por correo (SPEI)
+    const emailConfirmEl = document.getElementById('checkout-email-confirm');
+    if (emailConfirmEl) {
+        emailConfirmEl.href = buildEmailConfirmUrl(key);
+    }
+
+    modal.classList.add('is-active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCheckoutModal() {
+    const modal = document.getElementById('checkout-modal');
+    if (!modal) return;
+    modal.classList.remove('is-active');
+    document.body.style.overflow = '';
+}
+
+function initCheckoutModal() {
+    const modal = document.getElementById('checkout-modal');
+    if (!modal) return;
+
+    // Botones de contratación que abren el checkout
+    document.querySelectorAll('[data-open-checkout]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const planKey = btn.getAttribute('data-open-checkout') || 'ONLINE';
+            openCheckoutModal(planKey);
+        });
+    });
+
+    // Cerrar modal
+    const closeBtns = modal.querySelectorAll('[data-close-checkout]');
+    closeBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeCheckoutModal();
+        });
+    });
+
+    // Pestañas (Mercado Pago vs SPEI)
+    const tabBtns = modal.querySelectorAll('.payment-tab-btn');
+    const tabPanes = modal.querySelectorAll('.payment-tab-pane');
+
+    tabBtns.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetId = tab.getAttribute('data-tab-target');
+            tabBtns.forEach(t => t.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+
+            tab.classList.add('active');
+            const targetPane = document.getElementById(targetId);
+            if (targetPane) targetPane.classList.add('active');
+        });
+    });
+
+    // Botón Copiar CLABE Interbancaria
+    const copyBtn = document.getElementById('btn-copy-clabe');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            const clabe = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.SPEI && CONFIG.PAYMENT_CONFIG.SPEI.clabe) || '012180001234567890';
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(clabe).then(() => {
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.classList.add('copied');
+                    copyBtn.innerHTML = '<span>✓ ¡CLABE Copiada!</span>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                        copyBtn.classList.remove('copied');
+                    }, 2500);
+                }).catch(() => {
+                    prompt('Copia tu CLABE Interbancaria (18 dígitos):', clabe);
+                });
+            } else {
+                prompt('Copia tu CLABE Interbancaria (18 dígitos):', clabe);
+            }
+        });
+    }
+
+    // Cerrar con tecla Escape
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('is-active')) {
+            closeCheckoutModal();
+        }
+    });
+
+    // Cerrar haciendo clic en el backdrop oscurecido
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeCheckoutModal();
+        }
+    });
+}
+
 // Inicialización robusta para navegador
 function initAll() {
     initSimulator();
     initFaqAccordion();
     initNavbarScroll();
     initLeadFormsAndCTAs();
+    initCheckoutModal();
 }
 
 if (typeof document !== 'undefined') {
@@ -280,6 +420,9 @@ if (typeof window !== 'undefined') {
     window.buildWhatsAppUrl = buildWhatsAppUrl;
     window.formatCurrency = formatCurrency;
     window.PRICING_PLANS = PRICING_PLANS;
-    window.buildPlanWhatsAppUrl = buildPlanWhatsAppUrl;
+    window.buildEmailConfirmUrl = buildEmailConfirmUrl;
+    window.openCheckoutModal = openCheckoutModal;
+    window.closeCheckoutModal = closeCheckoutModal;
 }
+
 
