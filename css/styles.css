@@ -2666,3 +2666,47 @@ button, input {
 .hero-contract-cta:hover {
     box-shadow: 0 10px 25px rgba(5, 150, 105, 0.45) !important;
 }
+
+/* ==========================================================================
+   HERO — COLUMNA DE IMAGEN DE LA ASESORA
+   ========================================================================== */
+
+.hero-image-col {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    min-height: 480px;
+    box-shadow:
+        0 24px 60px rgba(15, 39, 68, 0.22),
+        0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.hero-asesora-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    border-radius: var(--radius-lg);
+    transition: transform 0.5s ease;
+}
+
+.hero-image-col:hover .hero-asesora-img {
+    transform: scale(1.03);
+}
+
+@media (max-width: 900px) {
+    .hero-image-col {
+        min-height: 320px;
+        border-radius: var(--radius-md);
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-image-col {
+        min-height: 260px;
+    }
+}
