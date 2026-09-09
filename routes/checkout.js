@@ -57,7 +57,8 @@ export async function createPreference(req, res, accessToken, baseUrl) {
                     pending: `${baseUrl}/pago-pendiente`,
                     failure: `${baseUrl}/pago-fallido`,
                 },
-                auto_return: 'approved',        // redirige automáticamente en pago aprobado
+                // auto_return solo funciona con HTTPS en dominio real (no localhost)
+                ...(baseUrl.startsWith('https://') && { auto_return: 'approved' }),
                 statement_descriptor: 'GRUPOM40',
                 external_reference: `${planKey}-${Date.now()}`,
                 metadata: {
@@ -80,11 +81,12 @@ export async function createPreference(req, res, accessToken, baseUrl) {
             }));
 
         } catch (err) {
-            console.error('[MP Checkout] Error creando preference:', err?.message || err);
+            const detail = err?.cause ?? err?.message ?? String(err);
+            console.error('[MP Checkout] Error creando preference:', JSON.stringify(detail, null, 2));
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 error: 'No se pudo crear la preference de pago.',
-                detail: err?.message,
+                detail: typeof detail === 'object' ? detail : String(detail),
             }));
         }
     });
