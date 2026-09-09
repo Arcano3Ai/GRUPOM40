@@ -17,8 +17,8 @@ const CONFIG = {
             concepto: 'Asesoria M40'
         },
         MERCADO_PAGO: {
-            ONLINE: 'https://mpago.la/online-m40',
-            PRESENCIAL: 'https://mpago.la/presencial-m40'
+            ONLINE: 'https://mpago.la/2gHR2gv',
+            PRESENCIAL: 'https://mpago.la/17PaiDx'
         }
     }
 };
@@ -302,6 +302,15 @@ function openCheckoutModal(planKey = 'ONLINE') {
     // Reset del botón de MP al estado inicial
     resetMpButton();
 
+    // Actualizar enlace directo de Mercado Pago según el plan seleccionado
+    const mpBtn = document.getElementById('checkout-mp-button');
+    if (mpBtn) {
+        const directUrl = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO[key]) || 'https://mpago.la/2gHR2gv';
+        if (mpBtn.tagName === 'A') {
+            mpBtn.href = directUrl;
+        }
+    }
+
     // Actualizar el enlace de confirmación por correo (SPEI)
     const emailConfirmEl = document.getElementById('checkout-email-confirm');
     if (emailConfirmEl) {
@@ -356,10 +365,21 @@ function initCheckoutModal() {
         });
     });
 
-    // Botón de Mercado Pago → llama al endpoint real
+    // Botón de Mercado Pago → abre el link oficial de Mercado Pago
     const mpBtn = document.getElementById('checkout-mp-button');
     if (mpBtn) {
         mpBtn.addEventListener('click', (e) => {
+            const key = (currentCheckoutPlan || 'ONLINE').toUpperCase();
+            const directUrl = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO[key]);
+            if (directUrl) {
+                if (mpBtn.tagName === 'A') {
+                    // Si es enlace <a>, el navegador abre mpBtn.href naturalmente con target="_blank"
+                    return;
+                }
+                e.preventDefault();
+                window.open(directUrl, '_blank', 'noopener,noreferrer');
+                return;
+            }
             e.preventDefault();
             fetchMercadoPagoCheckout(currentCheckoutPlan);
         });

@@ -16,8 +16,8 @@ export const CONFIG = {
             concepto: 'Asesoria M40'
         },
         MERCADO_PAGO: {
-            ONLINE: 'https://mpago.la/online-m40',
-            PRESENCIAL: 'https://mpago.la/presencial-m40'
+            ONLINE: 'https://mpago.la/2gHR2gv',
+            PRESENCIAL: 'https://mpago.la/17PaiDx'
         }
     }
 };

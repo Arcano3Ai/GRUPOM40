@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3000;
-const HOST = '127.0.0.1';
+const HOST = process.env.HOST || '0.0.0.0';
 const ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || '';
 const BASE_URL = process.env.BASE_URL || `http://${HOST}:${PORT}`;
 
