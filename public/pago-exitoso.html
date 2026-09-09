@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Pago Exitoso! — Grupo Modalidad 40</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0F2744;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+        }
+        .icon-circle {
+            width: 88px; height: 88px;
+            background: linear-gradient(135deg, #059669, #10B981);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.35);
+            animation: pop 0.5s cubic-bezier(.36,.07,.19,.97);
+        }
+        @keyframes pop {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        h1 { font-family: 'Outfit', sans-serif; font-size: 1.9rem; color: #0F2744; margin-bottom: 0.75rem; }
+        p { color: #475569; line-height: 1.65; margin-bottom: 1rem; }
+        .highlight { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; padding: 1rem 1.25rem; margin: 1.5rem 0; }
+        .highlight p { color: #065F46; margin: 0; font-weight: 600; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: linear-gradient(135deg, #0F2744, #1A3E6B);
+            color: #fff; text-decoration: none;
+            padding: 0.9rem 2rem; border-radius: 999px;
+            font-weight: 700; font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 18px rgba(15,39,68,0.3);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15,39,68,0.4); }
+        .footer-note { margin-top: 1.5rem; font-size: 0.85rem; color: #94A3B8; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon-circle">✅</div>
+        <h1>¡Pago confirmado!</h1>
+        <p>Tu pago fue procesado con éxito. En breve recibirás un correo de confirmación con los detalles de tu asesoría de Modalidad 40.</p>
+
+        <div class="highlight">
+            <p>📧 Revisa tu correo electrónico — te contactaremos para agendar tu sesión en las próximas horas.</p>
+        </div>
+
+        <a href="/" class="btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Volver al inicio
+        </a>
+
+        <p class="footer-note">Grupo Modalidad 40 · Especialistas en Pensiones Ley 73</p>
+    </div>
+</body>
+</html>

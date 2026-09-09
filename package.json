@@ -7,5 +7,9 @@
     "start": "node server.js",
     "test": "node --test tests/*.test.js",
     "swarm": "node swarm/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "mercadopago": "^3.6.0"
   }
 }

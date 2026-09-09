@@ -293,16 +293,14 @@ function openCheckoutModal(planKey = 'ONLINE') {
     // Actualizar datos del plan en el modal
     const planNameEl = document.getElementById('checkout-plan-name');
     const planPriceEl = document.getElementById('checkout-plan-price');
-    const mpLinkEl = document.getElementById('checkout-mp-button');
     const speiAmountEl = document.getElementById('checkout-spei-amount');
 
     if (planNameEl) planNameEl.textContent = plan.name;
     if (planPriceEl) planPriceEl.textContent = plan.priceFormatted;
     if (speiAmountEl) speiAmountEl.textContent = plan.priceFormatted;
 
-    const mpUrl = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO[key])
-        || 'https://www.mercadopago.com.mx';
-    if (mpLinkEl) mpLinkEl.href = mpUrl;
+    // Reset del botón de MP al estado inicial
+    resetMpButton();
 
     // Actualizar el enlace de confirmación por correo (SPEI)
     const emailConfirmEl = document.getElementById('checkout-email-confirm');
@@ -352,12 +350,20 @@ function initCheckoutModal() {
             const targetId = tab.getAttribute('data-tab-target');
             tabBtns.forEach(t => t.classList.remove('active'));
             tabPanes.forEach(p => p.classList.remove('active'));
-
             tab.classList.add('active');
             const targetPane = document.getElementById(targetId);
             if (targetPane) targetPane.classList.add('active');
         });
     });
+
+    // Botón de Mercado Pago → llama al endpoint real
+    const mpBtn = document.getElementById('checkout-mp-button');
+    if (mpBtn) {
+        mpBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            fetchMercadoPagoCheckout(currentCheckoutPlan);
+        });
+    }
 
     // Botón Copiar CLABE Interbancaria
     const copyBtn = document.getElementById('btn-copy-clabe');
@@ -414,6 +420,88 @@ if (typeof document !== 'undefined') {
     }
 }
 
+/* ==========================================================================
+   MERCADO PAGO CHECKOUT PRO — Fetch al endpoint real
+   ========================================================================== */
+
+/**
+ * Llama a POST /api/create-preference en el backend,
+ * obtiene el init_point real de MP y redirige al checkout.
+ */
+async function fetchMercadoPagoCheckout(planKey) {
+    const btn = document.getElementById('checkout-mp-button');
+    setMpButtonLoading(btn);
+
+    try {
+        const response = await fetch('/api/create-preference', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plan: planKey }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+            throw new Error(data.error || `HTTP ${response.status}`);
+        }
+
+        // En sandbox usamos sandbox_init_point; en producción, init_point
+        const isSandbox = data.sandbox_init_point && !data.init_point?.includes('www.mercadopago');
+        const url = data.init_point || data.sandbox_init_point;
+
+        if (!url) throw new Error('No se recibió URL de pago de Mercado Pago.');
+
+        // Abrir en la misma ventana (flujo estándar de Checkout Pro)
+        window.location.href = url;
+
+    } catch (err) {
+        console.error('[MP Checkout Pro] Error:', err.message);
+        resetMpButton();
+        showMpError(err.message);
+    }
+}
+
+function setMpButtonLoading(btn) {
+    if (!btn) return;
+    btn.disabled = true;
+    btn.dataset.originalHtml = btn.innerHTML;
+    btn.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="animation: spin 1s linear infinite">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        </svg>
+        <span>Conectando con Mercado Pago...</span>
+    `;
+}
+
+function resetMpButton() {
+    const btn = document.getElementById('checkout-mp-button');
+    if (!btn) return;
+    btn.disabled = false;
+    if (btn.dataset.originalHtml) {
+        btn.innerHTML = btn.dataset.originalHtml;
+    } else {
+        btn.innerHTML = `
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14h2v2h-2v-2zm0-10h2v8h-2V6z"/>
+            </svg>
+            <span>Pagar Seguro con Mercado Pago &rarr;</span>
+        `;
+    }
+}
+
+function showMpError(msg) {
+    const container = document.getElementById('tab-pane-mp');
+    if (!container) return;
+    const existing = container.querySelector('.mp-error-alert');
+    if (existing) existing.remove();
+    const alert = document.createElement('div');
+    alert.className = 'mp-error-alert';
+    alert.style.cssText = 'background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:0.75rem 1rem;margin-top:0.75rem;color:#991B1B;font-size:0.9rem;font-weight:600;';
+    alert.textContent = `⚠️ No se pudo conectar con Mercado Pago. Intenta de nuevo o usa SPEI. (${msg})`;
+    container.appendChild(alert);
+    setTimeout(() => alert.remove(), 8000);
+}
+
 // Exponer al objeto global para acceso directo e infalible en browser
 if (typeof window !== 'undefined') {
     window.CONFIG = CONFIG;
@@ -423,6 +511,14 @@ if (typeof window !== 'undefined') {
     window.buildEmailConfirmUrl = buildEmailConfirmUrl;
     window.openCheckoutModal = openCheckoutModal;
     window.closeCheckoutModal = closeCheckoutModal;
+    window.fetchMercadoPagoCheckout = fetchMercadoPagoCheckout;
 }
 
-
+/* CSS de animación de carga — inyectado dinámicamente */
+(function injectSpinCSS() {
+    if (document.getElementById('mp-spin-style')) return;
+    const style = document.createElement('style');
+    style.id = 'mp-spin-style';
+    style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+    document.head.appendChild(style);
+})();
