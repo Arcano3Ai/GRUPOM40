@@ -85,10 +85,10 @@ const PRICING_PLANS = {
         price: 3500,
         priceFormatted: '$3,500 MXN',
         badge: 'Recomendado • Todo Incluido',
-        subtitle: 'Atención personalizada en la casa del cliente o en un lugar comercial (como un café), con revisión documental cara a cara y acompañamiento total.',
+        subtitle: 'Atención presencial cara a cara en un café o lugar neutral acordado con el cliente, con revisión documental física y acompañamiento total.',
         features: [
             'Todo lo incluido en el Plan Online',
-            'Sesión privada presencial en casa del cliente (o en un lugar comercial como un café) con la asesora experta en pensiones',
+            'Sesión presencial cara a cara en café o lugar neutral acordado con el cliente y la asesora experta en pensiones',
             'Revisión física y cotejo minucioso de documentos originales (historial, constancias, AFORE)',
             'Expediente físico impreso formal con proyecciones financieras y análisis de rentabilidad',
             'Acompañamiento y preparación para trámites en subdelegación y ventanilla del IMSS',
