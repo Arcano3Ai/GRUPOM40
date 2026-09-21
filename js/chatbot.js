@@ -1,9 +1,14 @@
-/**
- * GRUPO MODALIDAD 40 - MOTOR DEL CHATBOT Y FUNNEL DE VENTAS
- * Diagnóstico rápido, filtro de calificación Ley 73, activación de dolor y oferta.
- */
+const OFFICIAL_PHONE = '528121912778';
 
-import { CONFIG, PRICING_PLANS } from './core.js';
+function getOfficialPhone() {
+    if (typeof window !== 'undefined' && window.CONFIG && window.CONFIG.PHONE) {
+        return window.CONFIG.PHONE;
+    }
+    if (typeof CONFIG !== 'undefined' && CONFIG && CONFIG.PHONE) {
+        return CONFIG.PHONE;
+    }
+    return OFFICIAL_PHONE;
+}
 
 export const CHATBOT_KNOWLEDGE = {
     QUE_ES_M40: `La **Modalidad 40** (Continuación Voluntaria en el Régimen Obligatorio) es un derecho contemplado en el Artículo 218 de la Ley del Seguro Social de 1973. 
@@ -45,7 +50,7 @@ export function buildChatbotWhatsAppUrl(leadData = {}) {
         planInteres
     } = leadData || {};
 
-    const phone = (typeof CONFIG !== 'undefined' && CONFIG.PHONE) ? CONFIG.PHONE : '528121912778';
+    const phone = getOfficialPhone();
 
     let ubicacionTexto = 'Por especificar';
     if (ubicacion) {
@@ -411,82 +416,86 @@ Tienes acceso a nuestro servicio de mayor valor:
 export function initChatbotUI() {
     if (typeof document === 'undefined') return;
 
-    // Evitar doble inyección
-    if (document.getElementById('m40-bot-widget-container')) return;
+    let botContainer = document.getElementById('m40-bot-widget-container');
+    if (botContainer && botContainer.getAttribute('data-initialized') === 'true') {
+        return;
+    }
 
     const botEngine = createChatbotEngine();
 
-    // Crear contenedor de botones apilados para ubicarlo sobre el botón actual de la esquina
-    const botContainer = document.createElement('div');
-    botContainer.id = 'm40-bot-widget-container';
-    botContainer.className = 'm40-bot-widget-container';
+    if (!botContainer) {
+        botContainer = document.createElement('div');
+        botContainer.id = 'm40-bot-widget-container';
+        botContainer.className = 'm40-bot-widget-container';
 
-    botContainer.innerHTML = `
-        <!-- Tooltip emergente de invitación -->
-        <div class="m40-bot-teaser" id="m40-bot-teaser">
-            <span class="teaser-icon">💬</span>
-            <div class="teaser-content">
-                <strong>¿Calificas para Ley 73?</strong>
-                <span>Diagnóstico Express en 1 min</span>
+        botContainer.innerHTML = `
+            <!-- Tooltip emergente de invitación -->
+            <div class="m40-bot-teaser" id="m40-bot-teaser">
+                <span class="teaser-icon">💬</span>
+                <div class="teaser-content">
+                    <strong>¿Calificas para Ley 73?</strong>
+                    <span>Diagnóstico Express en 1 min</span>
+                </div>
+                <button type="button" class="teaser-close" id="btn-close-teaser" aria-label="Cerrar aviso">&times;</button>
             </div>
-            <button type="button" class="teaser-close" id="btn-close-teaser" aria-label="Cerrar aviso">&times;</button>
-        </div>
 
-        <!-- Botón Lanzador del Bot (Directo sobre el botón actual) -->
-        <button type="button" class="m40-bot-launcher-btn" id="m40-bot-launcher" aria-label="Abrir Asistente Virtual y Diagnóstico de Pensión" title="Asistente Virtual Ley 73">
-            <div class="bot-launcher-avatar">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18 2.5 2.5 0 0 0 10 15.5 2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5Z"/>
-                </svg>
-            </div>
-            <span class="bot-launcher-badge">1</span>
-        </button>
+            <!-- Botón Lanzador del Bot (Directo sobre el botón actual) -->
+            <button type="button" class="m40-bot-launcher-btn" id="m40-bot-launcher" aria-label="Abrir Asistente Virtual y Diagnóstico de Pensión" title="Asistente Virtual Ley 73">
+                <div class="bot-launcher-avatar">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18 2.5 2.5 0 0 0 10 15.5 2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5Z"/>
+                    </svg>
+                </div>
+                <span class="bot-launcher-badge">1</span>
+            </button>
 
-        <!-- Ventana de Chat Flotante -->
-        <div class="m40-bot-chat-window" id="m40-bot-chat-window" role="dialog" aria-label="Asistente Virtual Modalidad 40">
-            <!-- Header -->
-            <div class="m40-bot-header">
-                <div class="bot-header-advisor">
-                    <div class="bot-avatar-wrap">
-                        <div class="bot-avatar-inner">👩‍💼</div>
-                        <span class="bot-status-dot" title="En línea"></span>
+            <!-- Ventana de Chat Flotante -->
+            <div class="m40-bot-chat-window" id="m40-bot-chat-window" role="dialog" aria-label="Asistente Virtual Modalidad 40">
+                <!-- Header -->
+                <div class="m40-bot-header">
+                    <div class="bot-header-advisor">
+                        <div class="bot-avatar-wrap">
+                            <div class="bot-avatar-inner">👩‍💼</div>
+                            <span class="bot-status-dot" title="En línea"></span>
+                        </div>
+                        <div class="bot-advisor-info">
+                            <h4 class="bot-advisor-name">Asesora Virtual M40</h4>
+                            <span class="bot-advisor-sub">🟢 Diagnóstico y Calificación Ley 73</span>
+                        </div>
                     </div>
-                    <div class="bot-advisor-info">
-                        <h4 class="bot-advisor-name">Asesora Virtual M40</h4>
-                        <span class="bot-advisor-sub">🟢 Diagnóstico y Calificación Ley 73</span>
+                    <div class="bot-header-actions">
+                        <button type="button" class="btn-bot-header" id="btn-bot-reset" title="Reiniciar conversación" aria-label="Reiniciar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="btn-bot-header" id="btn-bot-close" title="Cerrar chat" aria-label="Cerrar">&times;</button>
                     </div>
                 </div>
-                <div class="bot-header-actions">
-                    <button type="button" class="btn-bot-header" id="btn-bot-reset" title="Reiniciar conversación" aria-label="Reiniciar">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                            <path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/>
-                        </svg>
-                    </button>
-                    <button type="button" class="btn-bot-header" id="btn-bot-close" title="Cerrar chat" aria-label="Cerrar">&times;</button>
+
+                <!-- Cuerpo de Mensajes -->
+                <div class="m40-bot-body" id="m40-bot-messages"></div>
+
+                <!-- Indicador de Escribiendo... -->
+                <div class="m40-bot-typing" id="m40-bot-typing" style="display:none;">
+                    <span></span><span></span><span></span>
+                </div>
+
+                <!-- Contenedor de Botones de Opciones / Quick Replies -->
+                <div class="m40-bot-options-bar" id="m40-bot-options"></div>
+
+                <!-- Footer rápido con pase a WhatsApp humano -->
+                <div class="m40-bot-footer">
+                    <a href="https://wa.me/528121912778" id="btn-bot-direct-wa" class="bot-footer-wa-link">
+                        <span>📱 ¿Dudas directas? Habla con un Asesor por WhatsApp &rarr;</span>
+                    </a>
                 </div>
             </div>
+        `;
+        document.body.appendChild(botContainer);
+    }
 
-            <!-- Cuerpo de Mensajes -->
-            <div class="m40-bot-body" id="m40-bot-messages"></div>
-
-            <!-- Indicador de Escribiendo... -->
-            <div class="m40-bot-typing" id="m40-bot-typing" style="display:none;">
-                <span></span><span></span><span></span>
-            </div>
-
-            <!-- Contenedor de Botones de Opciones / Quick Replies -->
-            <div class="m40-bot-options-bar" id="m40-bot-options"></div>
-
-            <!-- Footer rápido con pase a WhatsApp humano -->
-            <div class="m40-bot-footer">
-                <a href="#" id="btn-bot-direct-wa" class="bot-footer-wa-link">
-                    <span>📱 ¿Dudas directas? Habla con un Asesor por WhatsApp &rarr;</span>
-                </a>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(botContainer);
+    botContainer.setAttribute('data-initialized', 'true');
 
     const launcherBtn = document.getElementById('m40-bot-launcher');
     const chatWindow = document.getElementById('m40-bot-chat-window');
@@ -592,11 +601,11 @@ export function initChatbotUI() {
             const waUrl = buildChatbotWhatsAppUrl(leadData);
             window.open(waUrl, '_blank');
         } else if (actionId === 'action_wa_ley97') {
-            const phone = (CONFIG && CONFIG.PHONE) ? CONFIG.PHONE : '528121912778';
+            const phone = getOfficialPhone();
             const url = `https://wa.me/${phone}?text=${encodeURIComponent('Hola, hice el diagnóstico en la web y coticé a partir de julio de 1997 (Ley 97). Quisiera consultar una duda sobre mi situación.')}`;
             window.open(url, '_blank');
         } else if (actionId === 'action_wa_duda') {
-            const phone = (CONFIG && CONFIG.PHONE) ? CONFIG.PHONE : '528121912778';
+            const phone = getOfficialPhone();
             const url = `https://wa.me/${phone}?text=${encodeURIComponent('Hola, tengo duda sobre si soy Ley 73 o Ley 97 con mi NSS. ¿Me apoyan revisando?')}`;
             window.open(url, '_blank');
         }
@@ -653,6 +662,14 @@ export function initChatbotUI() {
     }, 5000);
 }
 
+// Exposición en entorno global para máxima interoperabilidad (módulos y scripts clásicos)
+if (typeof window !== 'undefined') {
+    window.initChatbotUI = initChatbotUI;
+    window.createChatbotEngine = createChatbotEngine;
+    window.CHATBOT_KNOWLEDGE = CHATBOT_KNOWLEDGE;
+    window.buildChatbotWhatsAppUrl = buildChatbotWhatsAppUrl;
+}
+
 // Inicialización automática
 if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
@@ -661,3 +678,4 @@ if (typeof document !== 'undefined') {
         initChatbotUI();
     }
 }
+
