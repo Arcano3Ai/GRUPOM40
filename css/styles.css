@@ -16,7 +16,7 @@
     
     /* Textos & Neutros */
     --color-text-main: #1E293B;        /* Gris pizarra oscuro (máxima legibilidad) */
-    --color-text-muted: #64748B;       /* Gris suave para detalles */
+    --color-text-muted: #475569;       /* Slate 600 de alto contraste accesible WCAG AAA */
     --color-text-light: #94A3B8;
     --color-bg-light: #F8FAFC;         /* Blanco roto suave */
     --color-bg-card: #FFFFFF;
@@ -34,8 +34,8 @@
     --radius-full: 9999px;
 
     /* Tipografía */
-    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-heading: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* Reset y Base */

@@ -35,20 +35,20 @@
     <meta name="msapplication-navbutton-color" content="#0F2744">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0F2744">
 
-    <!-- Preload de Recursos Críticos (LCP Hero & Tipografía) -->
-    <link rel="preload" as="image" type="image/webp" href="assets/hero-asesora.webp" fetchpriority="high">
+    <!-- Preload de Recursos Críticos Responsive (LCP Hero) -->
+    <link rel="preload" as="image" type="image/webp" href="assets/hero-asesora.webp" imagesrcset="assets/hero-asesora-500.webp 500w, assets/hero-asesora.webp 800w" imagesizes="(max-width: 600px) 500px, 600px" fetchpriority="high">
 
-    <!-- Tipografía Google Fonts Optimizada (Carga Asíncrona No Bloqueante) -->
+    <!-- Tipografía Google Fonts Optimizada (Carga Asíncrona No Bloqueante con Pesos Exactos) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
     <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap">
     </noscript>
 
     <!-- Estilos Principales Minificados de Alto Rendimiento -->
-    <link rel="stylesheet" href="css/styles.min.css?v=2.2.2">
+    <link rel="stylesheet" href="css/styles.min.css?v=2.2.3">
 
     <!-- Schema.org JSON-LD para SEO Local y Servicios Financieros -->
     <script type="application/ld+json">
@@ -186,7 +186,7 @@
             <div class="container hero-grid">
                 <!-- Columna Izquierda: Mensaje de Máxima Urgencia -->
                 <div class="hero-content">
-                    <span class="badge-trust" style="background: rgba(239, 68, 68, 0.12); color: #DC2626; border-color: rgba(239, 68, 68, 0.3);">
+                    <span class="badge-trust" style="background: rgba(239, 68, 68, 0.12); color: #991B1B; border-color: rgba(239, 68, 68, 0.3); font-weight: 700;">
                         🚨 ADVERTENCIA LEY 73 • RIESGO CRÍTICO DE INACCIÓN
                     </span>
                     <h1>
@@ -681,7 +681,7 @@
                 <p style="line-height: 1.6; margin-bottom: 1rem;">
                     Consultoría especializada en optimización legal y financiera de pensiones del Seguro Social bajo el Régimen Ley 73. Acompañamiento profesional en todo México.
                 </p>
-                <div style="font-size: 0.85rem; color: #64748B;">
+                <div style="font-size: 0.85rem; color: #CBD5E1;">
                     *Nota: Somos una firma de consultoría independiente especializada en derecho de seguridad social, no representamos ni formamos parte de la estructura del IMSS.
                 </div>
             </div>
@@ -821,7 +821,7 @@
                                     <span class="spei-label">CLABE Interbancaria (18 dígitos)</span>
                                     <strong class="spei-clabe-code" id="display-clabe">722969017074087021</strong>
                                 </div>
-                                <button type="button" class="btn-copy-clabe" id="btn-copy-clabe" title="Copiar CLABE al portapapeles">
+                                <button type="button" class="btn-copy-clabe" id="btn-copy-clabe" title="Copiar CLABE al portapapeles" aria-label="Copiar CLABE de Mercado Pago al portapapeles">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -875,7 +875,7 @@
                                     <span class="spei-label">Número de cuenta Spin (18 dígitos)</span>
                                     <strong class="spei-clabe-code" id="display-spin">728969000127902158</strong>
                                 </div>
-                                <button type="button" class="btn-copy-clabe" id="btn-copy-spin" title="Copiar número de cuenta Spin">
+                                <button type="button" class="btn-copy-clabe" id="btn-copy-spin" title="Copiar número de cuenta Spin" aria-label="Copiar número de cuenta Spin al portapapeles">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                                         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -920,8 +920,8 @@
     </div>
 
     <!-- Scripts Optimizados No Bloqueantes -->
-    <script defer src="js/app.js?v=2.2.2"></script>
-    <script type="module" src="js/chatbot.js?v=2.2.2"></script>
+    <script defer src="js/app.js?v=2.2.3"></script>
+    <script type="module" src="js/chatbot.js?v=2.2.3"></script>
 </body>
 
 </html>

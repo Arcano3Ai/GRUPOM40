@@ -645,12 +645,12 @@ export function initChatbotUI() {
         }, 350);
     }
 
-    // Auto-mostrar teaser tras 3 segundos para llamar la atención cordialmente
+    // Auto-mostrar teaser tras 5 segundos o cuando el usuario interactúe
     setTimeout(() => {
         if (teaserEl && !chatWindow.classList.contains('is-open')) {
             teaserEl.classList.add('is-visible');
         }
-    }, 3000);
+    }, 5000);
 }
 
 // Inicialización automática
