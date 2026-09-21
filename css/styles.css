@@ -1208,7 +1208,7 @@ button, input {
     padding-top: 2rem;
     text-align: center;
     font-size: 0.8rem;
-    color: #64748B;
+    color: #475569;
 }
 
 /* ==========================================================================
@@ -1482,7 +1482,7 @@ button, input {
 
 .quick-hint {
     font-size: 0.74rem;
-    color: #64748B;
+    color: #475569;
     line-height: 1.3;
 }
 
@@ -1500,7 +1500,7 @@ button, input {
 
 .quick-privacy {
     font-size: 0.75rem;
-    color: #64748B;
+    color: #475569;
     text-align: center;
     margin-top: -0.2rem;
 }
@@ -1560,7 +1560,7 @@ button, input {
     border: none;
     font-size: 2.2rem;
     line-height: 1;
-    color: #64748B;
+    color: #475569;
     cursor: pointer;
     border-radius: 8px;
     padding: 0.25rem 0.5rem;
@@ -1676,7 +1676,7 @@ button, input {
 
 .m40-input-hint {
     font-size: 0.78rem;
-    color: #64748B;
+    color: #475569;
     margin-top: 0.15rem;
 }
 
@@ -1724,7 +1724,7 @@ button, input {
 
 .m40-privacy-disclaimer {
     font-size: 0.78rem;
-    color: #64748B;
+    color: #475569;
     text-align: center;
     line-height: 1.4;
     margin-top: 0.15rem;
@@ -2131,6 +2131,7 @@ button, input {
 
 /* Botón Cerrar */
 .modal-close-btn {
+
     position: absolute;
     top: 1.25rem;
     right: 1.25rem;
@@ -2147,6 +2148,12 @@ button, input {
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-close-btn:hover {
@@ -2190,7 +2197,7 @@ button, input {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 700;
-    color: #64748B;
+    color: #475569;
     margin-bottom: 0.25rem;
 }
 
@@ -2215,7 +2222,7 @@ button, input {
 
 .summary-plan-note {
     font-size: 0.78rem;
-    color: #64748B;
+    color: #475569;
     margin: 0.4rem 0 0 0;
 }
 
@@ -2241,7 +2248,7 @@ button, input {
     border-radius: 9px;
     font-size: 0.92rem;
     font-weight: 700;
-    color: #64748B;
+    color: #475569;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -2322,7 +2329,7 @@ button, input {
 .checkout-footer-guarantee {
     margin-top: 1rem;
     font-size: 0.78rem;
-    color: #64748B;
+    color: #475569;
     text-align: center;
 }
 
@@ -2358,7 +2365,7 @@ button, input {
     font-size: 0.72rem;
     text-transform: uppercase;
     font-weight: 700;
-    color: #64748B;
+    color: #475569;
     letter-spacing: 0.04em;
 }
 
@@ -2452,7 +2459,7 @@ button, input {
     align-items: center;
     justify-content: space-between;
     font-size: 0.82rem;
-    color: #64748B;
+    color: #475569;
     flex-wrap: wrap;
     gap: 0.5rem;
 }
@@ -2544,7 +2551,7 @@ button, input {
 
 .packages-card-header p {
     font-size: 0.82rem;
-    color: #64748B;
+    color: #475569;
     line-height: 1.35;
 }
 
@@ -2622,7 +2629,7 @@ button, input {
 .hero-pkg-price small {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #64748B;
+    color: #475569;
 }
 
 .hero-pkg-title {
@@ -2634,7 +2641,7 @@ button, input {
 
 .hero-pkg-desc {
     font-size: 0.8rem;
-    color: #64748B;
+    color: #475569;
     line-height: 1.35;
     margin-bottom: 0.85rem;
 }
@@ -2867,7 +2874,7 @@ button, input {
 
 .teaser-content span {
     font-size: 0.74rem;
-    color: #64748B;
+    color: #475569;
 }
 
 .teaser-close {
