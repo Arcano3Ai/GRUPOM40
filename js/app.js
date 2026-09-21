@@ -10,15 +10,23 @@ const CONFIG = {
     DIAS_MES_PROMEDIO: 30.4,
     FACTOR_COSTO_M40_2026: 0.14438,
     PAYMENT_CONFIG: {
-        SPEI: {
-            banco: 'BBVA México',
-            beneficiario: 'Asesoría Especializada Modalidad 40',
-            clabe: '012180001234567890',
+        MERCADO_PAGO: {
+            banco: 'Mercado Pago',
+            beneficiario: 'Sergio Adrian Perez Villarreal',
+            clabe: '722969017074087021',
             concepto: 'Asesoria M40'
         },
-        MERCADO_PAGO: {
-            ONLINE: 'https://mpago.la/2gHR2gv',
-            PRESENCIAL: 'https://mpago.la/17PaiDx'
+        SPIN: {
+            banco: 'Spin by OXXO',
+            beneficiario: 'Sergio Adrian Perez Villarreal',
+            cuenta: '728969000127902158',
+            concepto: 'Asesoria M40'
+        },
+        SPEI: {
+            banco: 'Mercado Pago',
+            beneficiario: 'Sergio Adrian Perez Villarreal',
+            clabe: '722969017074087021',
+            concepto: 'Asesoria M40'
         }
     }
 };
@@ -107,11 +115,12 @@ function buildPlanWhatsAppUrl(planKey) {
     return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(plan.whatsappMessage)}`;
 }
 
-function buildEmailConfirmUrl(planKey) {
+function buildEmailConfirmUrl(planKey, method = 'MERCADO_PAGO') {
     const key = (planKey || '').toUpperCase();
     const plan = PRICING_PLANS[key] || PRICING_PLANS.ONLINE;
-    const subject = encodeURIComponent(`Comprobante de Pago SPEI - ${plan.name} (${plan.priceFormatted})`);
-    const body = encodeURIComponent(`Hola, acabo de realizar el pago de ${plan.name} (${plan.priceFormatted}) vía SPEI. Adjunto mi comprobante para iniciar mi expediente y agendar mi asesoría.`);
+    const methodName = (method || '').toUpperCase() === 'SPIN' ? 'Spin by OXXO' : 'Mercado Pago (SPEI)';
+    const subject = encodeURIComponent(`Comprobante de Pago ${methodName} - ${plan.name} (${plan.priceFormatted})`);
+    const body = encodeURIComponent(`Hola, acabo de realizar el pago de ${plan.name} (${plan.priceFormatted}) vía ${methodName}. Adjunto mi comprobante para iniciar mi expediente y agendar mi asesoría.`);
     return `mailto:contacto@grupomodalidad40.com.mx?subject=${subject}&body=${body}`;
 }
 
@@ -294,27 +303,27 @@ function openCheckoutModal(planKey = 'ONLINE') {
     const planNameEl = document.getElementById('checkout-plan-name');
     const planPriceEl = document.getElementById('checkout-plan-price');
     const speiAmountEl = document.getElementById('checkout-spei-amount');
+    const oxxoAmountEl = document.getElementById('checkout-oxxo-amount');
+    const speiRefEl = document.getElementById('checkout-spei-ref');
+    const oxxoRefEl = document.getElementById('checkout-oxxo-ref');
 
     if (planNameEl) planNameEl.textContent = plan.name;
     if (planPriceEl) planPriceEl.textContent = plan.priceFormatted;
     if (speiAmountEl) speiAmountEl.textContent = plan.priceFormatted;
+    if (oxxoAmountEl) oxxoAmountEl.textContent = plan.priceFormatted;
+    if (speiRefEl) speiRefEl.textContent = plan.name;
+    if (oxxoRefEl) oxxoRefEl.textContent = plan.name;
 
-    // Reset del botón de MP al estado inicial
-    resetMpButton();
-
-    // Actualizar enlace directo de Mercado Pago según el plan seleccionado
-    const mpBtn = document.getElementById('checkout-mp-button');
-    if (mpBtn) {
-        const directUrl = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO[key]) || 'https://mpago.la/2gHR2gv';
-        if (mpBtn.tagName === 'A') {
-            mpBtn.href = directUrl;
-        }
-    }
-
-    // Actualizar el enlace de confirmación por correo (SPEI)
+    // Actualizar el enlace de confirmación por correo (Mercado Pago SPEI)
     const emailConfirmEl = document.getElementById('checkout-email-confirm');
     if (emailConfirmEl) {
-        emailConfirmEl.href = buildEmailConfirmUrl(key);
+        emailConfirmEl.href = buildEmailConfirmUrl(key, 'MERCADO_PAGO');
+    }
+
+    // Actualizar el enlace de confirmación por correo (Spin OXXO)
+    const oxxoEmailConfirmEl = document.getElementById('checkout-oxxo-email-confirm');
+    if (oxxoEmailConfirmEl) {
+        oxxoEmailConfirmEl.href = buildEmailConfirmUrl(key, 'SPIN');
     }
 
     modal.classList.add('is-active');
@@ -350,7 +359,7 @@ function initCheckoutModal() {
         });
     });
 
-    // Pestañas (Mercado Pago vs SPEI)
+    // Pestañas (Mercado Pago vs Spin by OXXO)
     const tabBtns = modal.querySelectorAll('.payment-tab-btn');
     const tabPanes = modal.querySelectorAll('.payment-tab-pane');
 
@@ -365,20 +374,11 @@ function initCheckoutModal() {
         });
     });
 
-    // Botón de Mercado Pago → ejecuta Checkout Pro (con fallback automático)
-    const mpBtn = document.getElementById('checkout-mp-button');
-    if (mpBtn) {
-        mpBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            fetchMercadoPagoCheckout(currentCheckoutPlan);
-        });
-    }
-
-    // Botón Copiar CLABE Interbancaria
+    // Botón Copiar CLABE Interbancaria (Mercado Pago)
     const copyBtn = document.getElementById('btn-copy-clabe');
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
-            const clabe = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.SPEI && CONFIG.PAYMENT_CONFIG.SPEI.clabe) || '012180001234567890';
+            const clabe = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO && CONFIG.PAYMENT_CONFIG.MERCADO_PAGO.clabe) || '722969017074087021';
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(clabe).then(() => {
                     const originalText = copyBtn.innerHTML;
@@ -389,10 +389,33 @@ function initCheckoutModal() {
                         copyBtn.classList.remove('copied');
                     }, 2500);
                 }).catch(() => {
-                    prompt('Copia tu CLABE Interbancaria (18 dígitos):', clabe);
+                    prompt('Copia la CLABE de Mercado Pago (18 dígitos):', clabe);
                 });
             } else {
-                prompt('Copia tu CLABE Interbancaria (18 dígitos):', clabe);
+                prompt('Copia la CLABE de Mercado Pago (18 dígitos):', clabe);
+            }
+        });
+    }
+
+    // Botón Copiar Cuenta Spin by OXXO
+    const copySpinBtn = document.getElementById('btn-copy-spin');
+    if (copySpinBtn) {
+        copySpinBtn.addEventListener('click', () => {
+            const cuentaSpin = (CONFIG.PAYMENT_CONFIG && CONFIG.PAYMENT_CONFIG.SPIN && CONFIG.PAYMENT_CONFIG.SPIN.cuenta) || '728969000127902158';
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(cuentaSpin).then(() => {
+                    const originalText = copySpinBtn.innerHTML;
+                    copySpinBtn.classList.add('copied');
+                    copySpinBtn.innerHTML = '<span>✓ ¡Cuenta Copiada!</span>';
+                    setTimeout(() => {
+                        copySpinBtn.innerHTML = originalText;
+                        copySpinBtn.classList.remove('copied');
+                    }, 2500);
+                }).catch(() => {
+                    prompt('Copia el número de cuenta Spin (18 dígitos):', cuentaSpin);
+                });
+            } else {
+                prompt('Copia el número de cuenta Spin (18 dígitos):', cuentaSpin);
             }
         });
     }

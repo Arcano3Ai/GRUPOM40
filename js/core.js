@@ -9,15 +9,23 @@ export const CONFIG = {
     DIAS_MES_PROMEDIO: 30.4,
     FACTOR_COSTO_M40_2026: 0.14438,
     PAYMENT_CONFIG: {
-        SPEI: {
-            banco: 'BBVA México',
-            beneficiario: 'Asesoría Especializada Modalidad 40',
-            clabe: '012180001234567890', // 18 dígitos oficiales
+        MERCADO_PAGO: {
+            banco: 'Mercado Pago',
+            beneficiario: 'Sergio Adrian Perez Villarreal',
+            clabe: '722969017074087021',
             concepto: 'Asesoria M40'
         },
-        MERCADO_PAGO: {
-            ONLINE: 'https://mpago.la/2gHR2gv',
-            PRESENCIAL: 'https://mpago.la/17PaiDx'
+        SPIN: {
+            banco: 'Spin by OXXO',
+            beneficiario: 'Sergio Adrian Perez Villarreal',
+            cuenta: '728969000127902158',
+            concepto: 'Asesoria M40'
+        },
+        SPEI: {
+            banco: 'Mercado Pago',
+            beneficiario: 'Sergio Adrian Perez Villarreal',
+            clabe: '722969017074087021',
+            concepto: 'Asesoria M40'
         }
     }
 };
@@ -106,7 +114,12 @@ export function buildPlanWhatsAppUrl(planKey) {
 export function buildPaymentWhatsAppConfirmationUrl(planKey, method = 'SPEI') {
     const key = (planKey || '').toUpperCase();
     const plan = PRICING_PLANS[key] || PRICING_PLANS.ONLINE;
-    const methodName = method.toUpperCase() === 'MERCADO_PAGO' ? 'Mercado Pago' : 'SPEI / Transferencia Bancaria';
+    let methodName = 'SPEI / Transferencia Bancaria';
+    if (method.toUpperCase() === 'MERCADO_PAGO') {
+        methodName = 'Mercado Pago';
+    } else if (method.toUpperCase() === 'SPIN') {
+        methodName = 'Spin by OXXO';
+    }
     const msg = `Hola Asesora, acabo de realizar el pago de mi ${plan.name} (${plan.priceFormatted}) vía ${methodName}. Adjunto mi comprobante para iniciar mi expediente y agendar mi asesoría.`;
     return `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(msg)}`;
 }

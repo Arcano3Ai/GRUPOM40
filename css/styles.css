@@ -2438,7 +2438,9 @@ button, input {
 .checkout-help-bar a {
     color: #0A2540;
     font-weight: 700;
- .checkout-help-bar a:hover {
+}
+
+.checkout-help-bar a:hover {
     text-decoration: underline;
     color: #b38e2d;
 }
@@ -2462,6 +2464,7 @@ button, input {
     .btn-copy-clabe {
         width: 100%;
         justify-content: center;
+    }
 }
 
 /* ==========================================================================
