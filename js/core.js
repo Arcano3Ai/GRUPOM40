@@ -4,7 +4,7 @@
  */
 
 export const CONFIG = {
-    PHONE: '5212206494278', // Teléfono Asesoría Oficial +52 1 220 649 4278
+    PHONE: '528121912778', // Teléfono Asesoría Oficial +52 81 2191 2778
     UMA_DIARIA_2026: 117.31,
     DIAS_MES_PROMEDIO: 30.4,
     FACTOR_COSTO_M40_2026: 0.14438,
