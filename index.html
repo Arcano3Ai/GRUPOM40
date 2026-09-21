@@ -53,8 +53,8 @@
     </noscript>
 
     <!-- Estilos Principales del Sitio y Asistente Virtual Flotante -->
-    <link rel="preload" href="css/styles.min.css?v=2.2.6" as="style">
-    <link rel="stylesheet" href="css/styles.min.css?v=2.2.6">
+    <link rel="preload" href="css/styles.min.css?v=2.2.8" as="style">
+    <link rel="stylesheet" href="css/styles.min.css?v=2.2.8">
 
     <!-- Schema.org JSON-LD para SEO Local y Servicios Financieros -->
     <script type="application/ld+json">
@@ -736,7 +736,7 @@
     </footer>
 
     <!-- WIDGET DEL ASISTENTE VIRTUAL / CHATBOT LEY 73 (ESTRUCTURA FIJA EN HTML) -->
-    <div class="m40-bot-widget-container" id="m40-bot-widget-container">
+    <div class="m40-bot-widget-container" id="m40-bot-widget-container" style="position: fixed; z-index: 9999; display: flex; align-items: center; gap: 0.75rem;">
         <!-- Teaser de Invitación -->
         <div class="m40-bot-teaser" id="m40-bot-teaser">
             <span class="teaser-icon">💬</span>
@@ -748,7 +748,7 @@
         </div>
 
         <!-- Botón Lanzador del Bot (Flotante sobre el botón de paquetes) -->
-        <button type="button" class="m40-bot-launcher-btn" id="m40-bot-launcher" aria-label="Abrir Asistente Virtual y Diagnóstico de Pensión" title="Asistente Virtual Ley 73">
+        <button type="button" class="m40-bot-launcher-btn" id="m40-bot-launcher" aria-label="Abrir Asistente Virtual y Diagnóstico de Pensión" title="Asistente Virtual Ley 73" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #059669 0%, #0F2744 100%); border: 2px solid #D4AF37; color: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 28px rgba(5, 150, 105, 0.45); position: relative;">
             <div class="bot-launcher-avatar">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7.5 13A2.5 2.5 0 0 0 5 15.5 2.5 2.5 0 0 0 7.5 18 2.5 2.5 0 0 0 10 15.5 2.5 2.5 0 0 0 7.5 13m9 0a2.5 2.5 0 0 0-2.5 2.5 2.5 0 0 0 2.5 2.5 2.5 2.5 0 0 0 2.5-2.5 2.5 2.5 0 0 0-2.5-2.5Z"/>
@@ -993,7 +993,7 @@
     </div>
 
     <!-- Scripts del Sitio y Asistente Virtual -->
-    <script defer src="js/app.js?v=2.2.7"></script>
+    <script defer src="js/app.js?v=2.2.8"></script>
 </body>
 
 </html>
