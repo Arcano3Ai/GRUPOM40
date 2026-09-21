@@ -116,13 +116,13 @@ Soy tu **Asistente Virtual** y en **1 minuto** te ayudaré a diagnosticar si ere
             id: 'descalifica_ley97',
             text: `⚠️ **Diagnóstico transparente y honesto:**
 
-La Modalidad 40 está diseñada con alto rendimiento para el régimen **Ley 73** (donde tu pensión se calcula por salario promedio de tus últimos 5 años).
+La Modalidad 40 está diseñada con alto rendimiento exclusivamente para el régimen **Ley 73** (donde tu pensión se calcula por el salario promedio de tus últimos 5 años cotizados).
 
-En tu caso (**Ley 97**), las aportaciones voluntarias van a tu cuenta individual de AFORE y no elevan tu pensión por salario promedio. **Por honestidad profesional, no recomendamos este esquema para ti.**
+En tu caso (**Ley 97**), este esquema no permite elevar tu pensión por salario promedio. **Por honestidad y ética profesional, este servicio no es aplicable para ti.**
 
-Si deseas una breve orientación sobre tu AFORE o plan de retiro personal, con gusto te apoyamos por WhatsApp.`,
+Si deseas resolver alguna duda específica sobre tu situación, con gusto te apoyamos por WhatsApp.`,
             options: [
-                { id: 'action_wa_ley97', label: '📲 Orientación sobre AFORE por WhatsApp', isAction: true },
+                { id: 'action_wa_ley97', label: '📲 Consultar dudas por WhatsApp', isAction: true },
                 { id: 'restart_bot', label: '🔄 Reiniciar diagnóstico' }
             ]
         },
@@ -593,7 +593,7 @@ export function initChatbotUI() {
             window.open(waUrl, '_blank');
         } else if (actionId === 'action_wa_ley97') {
             const phone = (CONFIG && CONFIG.PHONE) ? CONFIG.PHONE : '528121912778';
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent('Hola, hice el diagnóstico en la web y soy Ley 97. Quisiera orientación sobre mi AFORE.')}`;
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent('Hola, hice el diagnóstico en la web y coticé a partir de julio de 1997 (Ley 97). Quisiera consultar una duda sobre mi situación.')}`;
             window.open(url, '_blank');
         } else if (actionId === 'action_wa_duda') {
             const phone = (CONFIG && CONFIG.PHONE) ? CONFIG.PHONE : '528121912778';

@@ -25,8 +25,8 @@ test('createChatbotEngine - Filtro Ley 97 (Descalificación cordial)', () => {
     const step = bot.getCurrentStep();
     assert.strictEqual(step.id, 'descalifica_ley97');
     assert.ok(step.text.includes('Ley 73'));
-    assert.ok(step.text.includes('AFORE'));
-    assert.ok(step.text.includes('no recomendamos este esquema para ti'));
+    assert.ok(!step.text.toLowerCase().includes('afore'), 'El bot no debe mencionar la AFORE');
+    assert.ok(step.text.includes('este servicio no es aplicable para ti'));
     assert.strictEqual(bot.getLeadData().calificaLey73, false);
 });
 
