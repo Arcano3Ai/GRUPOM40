@@ -57,12 +57,34 @@ body {
     background-color: #FFFFFF;
     line-height: 1.6;
     overflow-x: hidden;
-    padding-bottom: 70px; /* Espacio para barra flotante móvil */
+    padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px)); /* Soporte iPhone Safe Area */
 }
 
 @media (min-width: 992px) {
     body {
         padding-bottom: 0;
+    }
+}
+
+/* Optimización táctil de 0ms y respuesta nativa (iOS y Android) */
+a, button, input, select, textarea, .nav-cta-btn, .btn-plan, .mobile-sticky-btn {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+input, select, textarea {
+    font-size: 16px; /* Evita zoom forzado en iOS Safari */
+}
+
+/* Optimización extrema de renderizado móvil (ahorro de CPU en secciones inferiores) */
+@media (max-width: 768px) {
+    .section#beneficios,
+    .section#testimonios,
+    .section#planes,
+    .section#faq,
+    .site-footer {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 650px;
     }
 }
 
@@ -1194,7 +1216,7 @@ button, input {
    ========================================================================== */
 .floating-whatsapp-widget {
     position: fixed;
-    bottom: 85px; /* Por encima de la barra móvil */
+    bottom: calc(85px + env(safe-area-inset-bottom, 0px)); /* Por encima de la barra móvil y safe area iOS */
     right: 20px;
     z-index: 999;
     display: flex;
@@ -1303,7 +1325,7 @@ button, input {
     width: 100%;
     background: #FFFFFF;
     border-top: 1px solid var(--color-border);
-    padding: 0.65rem 1rem;
+    padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom, 0px)); /* Soporte iPhone X/11/12/13/14/15/16 */
     z-index: 998;
     display: flex;
     align-items: center;
@@ -2737,7 +2759,7 @@ button, input {
 
 @media (max-width: 991px) {
     .m40-bot-widget-container {
-        bottom: 155px; /* En mobile, arriba del botón que está en bottom: 85px */
+        bottom: calc(155px + env(safe-area-inset-bottom, 0px)); /* En mobile, arriba del botón y safe area */
         right: 20px;
     }
 }
