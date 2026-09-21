@@ -35,13 +35,20 @@
     <meta name="msapplication-navbutton-color" content="#0F2744">
     <meta name="apple-mobile-web-app-status-bar-style" content="#0F2744">
 
-    <!-- Tipografía Google Fonts de Alta Calidad -->
+    <!-- Preload de Recursos Críticos (LCP Hero & Tipografía) -->
+    <link rel="preload" as="image" type="image/webp" href="assets/hero-asesora.webp" fetchpriority="high">
+
+    <!-- Tipografía Google Fonts Optimizada (Carga Asíncrona No Bloqueante) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+    </noscript>
 
-    <!-- Estilos Principales -->
-    <link rel="stylesheet" href="css/styles.css?v=2.2.1">
+    <!-- Estilos Principales Minificados de Alto Rendimiento -->
+    <link rel="stylesheet" href="css/styles.min.css?v=2.2.2">
 
     <!-- Schema.org JSON-LD para SEO Local y Servicios Financieros -->
     <script type="application/ld+json">
@@ -223,13 +230,19 @@
 
                 <!-- Columna Derecha: Imagen de la Asesora -->
                 <div class="hero-image-col">
-                    <img
-                        src="assets/hero-asesora.png"
-                        alt="Lic. Asesora Especialista en Pensiones Modalidad 40 Ley 73"
-                        class="hero-asesora-img"
-                        loading="eager"
-                        decoding="async"
-                    >
+                    <picture class="hero-picture">
+                        <source type="image/webp" srcset="assets/hero-asesora-500.webp 500w, assets/hero-asesora.webp 800w" sizes="(max-width: 600px) 500px, 600px">
+                        <img
+                            src="assets/hero-asesora.webp"
+                            alt="Lic. Asesora Especialista en Pensiones Modalidad 40 Ley 73"
+                            class="hero-asesora-img"
+                            width="600"
+                            height="600"
+                            loading="eager"
+                            fetchpriority="high"
+                            decoding="async"
+                        >
+                    </picture>
                 </div>
             </div>
         </section>
@@ -906,9 +919,9 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/app.js?v=2.2.1"></script>
-    <script type="module" src="js/chatbot.js?v=2.2.1"></script>
+    <!-- Scripts Optimizados No Bloqueantes -->
+    <script defer src="js/app.js?v=2.2.2"></script>
+    <script type="module" src="js/chatbot.js?v=2.2.2"></script>
 </body>
 
 </html>
